@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Administration — GestionScolaire CI</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --orange: #E8600A;
+      --orange-light: #FF8C2F;
+      --vert: #00843D;
+      --vert-light: #00A84F;
+      --rouge: #E53E3E;
+      --bleu: #0A1F44;
+      --bleu-mid: #1A3A6B;
+      --blanc: #FFFFFF;
+      --gris-bg: #F4F6FA;
+      --gris-bord: #E2E8F0;
+      --texte: #1A2B4A;
+      --texte-doux: #5A6A82;
+      --shadow-sm: 0 1px 3px rgba(10,31,68,0.08);
+      --shadow-md: 0 4px 12px rgba(10,31,68,0.10);
+      --shadow-lg: 0 12px 32px rgba(10,31,68,0.14);
+      --radius: 12px;
+      --radius-lg: 18px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: var(--gris-bg); color: var(--texte); min-height: 100vh; }
+
+    /* ── LOGIN ADMIN ── */
+    #loginAdmin {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--bleu) 0%, var(--bleu-mid) 100%);
+      padding: 20px;
+    }
+    .login-card {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 40px 36px;
+      width: 100%;
+      max-width: 380px;
+      box-shadow: var(--shadow-lg);
+    }
+    .login-card .drapeau {
+      display: flex;
+      width: 40px; height: 8px;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+    .login-card .drapeau div { flex: 1; }
+    .login-card h1 { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--bleu); font-weight: 900; margin-bottom: 4px; }
+    .login-card p { font-size: 12px; color: var(--texte-doux); margin-bottom: 28px; }
+    .field { margin-bottom: 16px; }
+    .field label { display: block; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--texte); margin-bottom: 6px; }
+    .field input {
+      width: 100%; padding: 12px 14px;
+      border: 1.5px solid var(--gris-bord);
+      border-radius: var(--radius);
+      font-family: 'Inter', sans-serif;
+      font-size: 14px; color: var(--texte);
+      background: var(--gris-bg); outline: none;
+      transition: all 0.2s;
+    }
+    .field input:focus { border-color: var(--orange); background: #fff; box-shadow: 0 0 0 3px rgba(232,96,10,0.12); }
+    .err { display: none; background: #FFF5F5; border: 1px solid #FEB2B2; border-radius: 8px; padding: 9px 14px; font-size: 12px; color: #C53030; font-weight: 500; margin-bottom: 14px; }
+    .btn-primary {
+      width: 100%; padding: 13px;
+      background: linear-gradient(135deg, var(--bleu), var(--bleu-mid));
+      color: white; border: none; border-radius: var(--radius);
+      font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 700;
+      cursor: pointer; transition: all 0.25s;
+      box-shadow: 0 4px 16px rgba(10,31,68,0.25);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(10,31,68,0.35); }
+
+    /* ── DASHBOARD ADMIN ── */
+    #dashAdmin { display: none; }
+
+    .topbar {
+      background: var(--blanc);
+      border-bottom: 1px solid var(--gris-bord);
+      padding: 0 24px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky; top: 0; z-index: 100;
+      box-shadow: var(--shadow-sm);
+    }
+    .topbar-left { display: flex; align-items: center; gap: 12px; }
+    .topbar-drapeau { display: flex; width: 28px; height: 5px; border-radius: 3px; overflow: hidden; }
+    .topbar-drapeau div { flex: 1; }
+    .topbar-brand { font-size: 15px; font-weight: 800; color: var(--bleu); }
+    .topbar-brand span { color: var(--orange); }
+    .admin-badge { background: var(--bleu); color: white; border-radius: 50px; padding: 4px 12px; font-size: 11px; font-weight: 700; letter-spacing: 1px; }
+    .btn-logout { background: transparent; border: 1.5px solid var(--gris-bord); border-radius: 50px; padding: 7px 16px; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 600; color: var(--texte-doux); cursor: pointer; transition: all 0.2s; }
+    .btn-logout:hover { border-color: var(--rouge); color: var(--rouge); background: #FFF5F5; }
+
+    .main { max-width: 1000px; margin: 0 auto; padding: 28px 20px 60px; }
+
+    /* STATS */
+    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 28px; }
+    .stat-card { background: white; border: 1px solid var(--gris-bord); border-radius: var(--radius); padding: 16px; display: flex; align-items: center; gap: 12px; box-shadow: var(--shadow-sm); }
+    .stat-ico { width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+    .stat-ico.orange { background: #FFF0E6; }
+    .stat-ico.vert { background: #E6F7EE; }
+    .stat-ico.rouge { background: #FFF5F5; }
+    .stat-ico.bleu { background: #EBF0FF; }
+    .stat-num { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 900; color: var(--bleu); line-height: 1; }
+    .stat-label { font-size: 11px; font-weight: 500; color: var(--texte-doux); margin-top: 2px; }
+
+    /* SECTION */
+    .section-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+    .section-head-left { display: flex; align-items: center; gap: 10px; }
+    .bar { width: 4px; height: 20px; border-radius: 3px; background: linear-gradient(to bottom, var(--orange), var(--vert)); flex-shrink: 0; }
+    .section-head h2 { font-size: 14px; font-weight: 700; color: var(--texte); }
+
+    .btn-refresh { background: var(--gris-bg); border: 1.5px solid var(--gris-bord); border-radius: 50px; padding: 7px 16px; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 600; color: var(--texte-doux); cursor: pointer; transition: all 0.2s; }
+    .btn-refresh:hover { border-color: var(--bleu); color: var(--bleu); }
+
+    /* TABLE */
+    .table-box { background: white; border: 1px solid var(--gris-bord); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-sm); margin-bottom: 28px; }
+    .table-box table { width: 100%; border-collapse: collapse; }
+    .table-box th { background: var(--gris-bg); padding: 12px 16px; text-align: left; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--texte-doux); border-bottom: 1px solid var(--gris-bord); }
+    .table-box td { padding: 14px 16px; font-size: 13px; border-bottom: 1px solid var(--gris-bord); vertical-align: middle; }
+    .table-box tr:last-child td { border-bottom: none; }
+    .table-box tr:hover td { background: #FAFBFF; }
+
+    .badge { display: inline-block; border-radius: 50px; padding: 3px 10px; font-size: 11px; font-weight: 700; }
+    .badge.attente { background: #FFF3CD; color: #856404; }
+    .badge.valide { background: #D4EDDA; color: #155724; }
+    .badge.rejete { background: #F8D7DA; color: #721C24; }
+
+    .op-badge { display: inline-flex; align-items: center; gap: 5px; background: var(--gris-bg); border: 1px solid var(--gris-bord); border-radius: 50px; padding: 3px 10px; font-size: 11px; font-weight: 600; }
+
+    /* ACTIONS */
+    .actions { display: flex; gap: 6px; flex-wrap: wrap; }
+    .btn-valider { background: linear-gradient(135deg, var(--vert), var(--vert-light)); color: white; border: none; border-radius: 8px; padding: 8px 14px; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+    .btn-valider:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,132,61,0.3); }
+    .btn-rejeter { background: var(--gris-bg); color: var(--rouge); border: 1.5px solid #FEB2B2; border-radius: 8px; padding: 8px 14px; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+    .btn-rejeter:hover { background: #FFF5F5; }
+    .btn-whatsapp { background: #25D366; color: white; border: none; border-radius: 8px; padding: 8px 14px; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+    .btn-whatsapp:hover { background: #1da851; transform: translateY(-1px); }
+
+    .empty-state { text-align: center; padding: 48px 20px; color: var(--texte-doux); }
+    .empty-state .ico { font-size: 40px; margin-bottom: 12px; }
+    .empty-state p { font-size: 13px; }
+
+    /* MODAL CODE */
+    #modalOverlay { display: none; position: fixed; inset: 0; background: rgba(10,31,68,0.5); backdrop-filter: blur(4px); z-index: 998; }
+    #modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%) scale(0.9); background: white; border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); width: 400px; max-width: 95vw; z-index: 999; opacity: 0; transition: all 0.3s cubic-bezier(0.22,1,0.36,1); overflow: hidden; }
+    #modal.show { opacity: 1; transform: translate(-50%,-50%) scale(1); }
+    .modal-header { background: linear-gradient(135deg, var(--vert), var(--vert-light)); padding: 24px; color: white; }
+    .modal-header h3 { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 900; margin-bottom: 4px; }
+    .modal-header p { font-size: 12px; opacity: 0.8; }
+    .modal-body { padding: 24px; }
+    .code-genere { background: var(--gris-bg); border: 2px dashed var(--vert); border-radius: var(--radius); padding: 20px; text-align: center; margin-bottom: 16px; }
+    .code-genere .label { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--texte-doux); margin-bottom: 8px; }
+    .code-genere .code { font-family: 'Playfair Display', serif; font-size: 36px; font-weight: 900; color: var(--vert); letter-spacing: 8px; }
+    .client-info { background: var(--gris-bg); border-radius: var(--radius); padding: 14px; margin-bottom: 16px; }
+    .client-info-row { display: flex; justify-content: space-between; font-size: 13px; padding: 4px 0; }
+    .client-info-row .key { color: var(--texte-doux); }
+    .client-info-row .val { font-weight: 600; color: var(--bleu); }
+    .modal-actions { display: flex; gap: 10px; }
+    .btn-envoyer-wa { flex: 1; background: #25D366; color: white; border: none; border-radius: var(--radius); padding: 12px; font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 6px; }
+    .btn-envoyer-wa:hover { background: #1da851; }
+    .btn-fermer-modal { background: var(--gris-bg); border: 1.5px solid var(--gris-bord); border-radius: var(--radius); padding: 12px 20px; font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600; color: var(--texte-doux); cursor: pointer; transition: all 0.2s; }
+    .btn-fermer-modal:hover { border-color: var(--rouge); color: var(--rouge); }
+
+    @media (max-width: 700px) {
+      .stats { grid-template-columns: repeat(2, 1fr); }
+      .table-box { overflow-x: auto; }
+      .table-box table { min-width: 600px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══ LOGIN ADMIN ═══ -->
+<div id="loginAdmin">
+  <div class="login-card">
+    <div class="drapeau">
+      <div style="background:#E8600A"></div>
+      <div style="background:#fff;border:1px solid #eee"></div>
+      <div style="background:#00843D"></div>
+    </div>
+    <h1>Espace Administrateur</h1>
+    <p>Gestion des paiements et activation des comptes</p>
+    <div class="err" id="errLogin">⚠️ Mot de passe incorrect.</div>
+    <div class="field">
+      <label>Mot de passe admin</label>
+      <input type="password" id="mdpAdmin" placeholder="••••••••"
+        onkeydown="if(event.key==='Enter')loginAdmin()">
+    </div>
+    <button class="btn-primary" onclick="loginAdmin()">Accéder au tableau de bord →</button>
+  </div>
+</div>
+
+<!-- ═══ DASHBOARD ADMIN ═══ -->
+<div id="dashAdmin">
+
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="topbar-drapeau">
+        <div style="background:#E8600A"></div>
+        <div style="background:#fff"></div>
+        <div style="background:#00843D"></div>
+      </div>
+      <div class="topbar-brand">Gestion<span>Scolaire</span></div>
+      <span class="admin-badge">⚙️ ADMIN</span>
+    </div>
+    <button class="btn-logout" onclick="logoutAdmin()">⏻ Déconnexion</button>
+  </div>
+
+  <div class="main">
+
+    <!-- STATS -->
+    <div class="stats">
+      <div class="stat-card">
+        <div class="stat-ico orange">⏳</div>
+        <div>
+          <div class="stat-num" id="statAttente">0</div>
+          <div class="stat-label">En attente</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-ico vert">✅</div>
+        <div>
+          <div class="stat-num" id="statValides">0</div>
+          <div class="stat-label">Validés</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-ico rouge">❌</div>
+        <div>
+          <div class="stat-num" id="statRejetes">0</div>
+          <div class="stat-label">Rejetés</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-ico bleu">💰</div>
+        <div>
+          <div class="stat-num" id="statRevenu">0</div>
+          <div class="stat-label">FCFA reçus</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAIEMENTS EN ATTENTE -->
+    <div class="section-head">
+      <div class="section-head-left">
+        <div class="bar"></div>
+        <h2>Paiements en attente de validation</h2>
+      </div>
+      <button class="btn-refresh" onclick="chargerDonnees()">🔄 Actualiser</button>
+    </div>
+
+    <div class="table-box" id="tableAttente">
+      <div class="empty-state">
+        <div class="ico">⏳</div>
+        <p>Chargement...</p>
+      </div>
+    </div>
+
+    <!-- PAIEMENTS VALIDÉS -->
+    <div class="section-head">
+      <div class="section-head-left">
+        <div class="bar"></div>
+        <h2>Comptes activés</h2>
+      </div>
+    </div>
+
+    <div class="table-box" id="tableValides">
+      <div class="empty-state">
+        <div class="ico">✅</div>
+        <p>Chargement...</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MODAL CODE -->
+<div id="modalOverlay" onclick="fermerModal()"></div>
+<div id="modal">
+  <div class="modal-header">
+    <h3>✅ Paiement validé</h3>
+    <p>Envoyez ce code au client via WhatsApp</p>
+  </div>
+  <div class="modal-body">
+    <div class="code-genere">
+      <div class="label">Code d'activation</div>
+      <div class="code" id="codeAffiche">------</div>
+    </div>
+    <div class="client-info" id="clientInfoModal"></div>
+    <div class="modal-actions">
+      <a id="btnEnvoyerWA" href="#" target="_blank" class="btn-envoyer-wa">
+        📲 Envoyer sur WhatsApp
+      </a>
+      <button class="btn-fermer-modal" onclick="fermerModal()">Fermer</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── MOT DE PASSE ADMIN ──────────────────────────────
+  const MDP_ADMIN = 'Admin@EcoleCI2025!';
+
+  function loginAdmin() {
+    const mdp = document.getElementById('mdpAdmin').value;
+    const err = document.getElementById('errLogin');
+    if (mdp === MDP_ADMIN) {
+      err.style.display = 'none';
+      sessionStorage.setItem('adminConnecte', '1');
+      document.getElementById('loginAdmin').style.display = 'none';
+      document.getElementById('dashAdmin').style.display = 'block';
+      chargerDonnees();
+    } else {
+      err.style.display = 'block';
+      document.getElementById('mdpAdmin').value = '';
+    }
+  }
+
+  function logoutAdmin() {
+    sessionStorage.removeItem('adminConnecte');
+    document.getElementById('dashAdmin').style.display = 'none';
+    document.getElementById('loginAdmin').style.display = 'flex';
+  }
+
+  // Vérifier session
+  window.addEventListener('DOMContentLoaded', () => {
+    if (sessionStorage.getItem('adminConnecte')) {
+      document.getElementById('loginAdmin').style.display = 'none';
+      document.getElementById('dashAdmin').style.display = 'block';
+      chargerDonnees();
+    }
+  });
+
+  // ── CHARGER DONNÉES ─────────────────────────────────
+  function chargerDonnees() {
+    const enAttente = JSON.parse(localStorage.getItem('paiementsEnAttente') || '{}');
+    const valides = JSON.parse(localStorage.getItem('paiementsValides') || '{}');
+    const rejetes = JSON.parse(localStorage.getItem('paiementsRejetes') || '{}');
+
+    // Stats
+    const nbAttente = Object.keys(enAttente).length;
+    const nbValides = Object.keys(valides).length;
+    const nbRejetes = Object.keys(rejetes).length;
+    document.getElementById('statAttente').textContent = nbAttente;
+    document.getElementById('statValides').textContent = nbValides;
+    document.getElementById('statRejetes').textContent = nbRejetes;
+    document.getElementById('statRevenu').textContent = (nbValides * 5000).toLocaleString('fr-FR');
+
+    // Table en attente
+    const tblAttente = document.getElementById('tableAttente');
+    if (nbAttente === 0) {
+      tblAttente.innerHTML = '<div class="empty-state"><div class="ico">🎉</div><p>Aucun paiement en attente</p></div>';
+    } else {
+      let html = '<table><thead><tr><th>ID Client</th><th>Téléphone</th><th>Opérateur</th><th>Date</th><th>Actions</th></tr></thead><tbody>';
+      for (const [id, data] of Object.entries(enAttente)) {
+        const opIco = data.operateur === 'wave' ? '🌊' : data.operateur === 'orange' ? '🟠' : '🟡';
+        const opNom = data.operateur === 'wave' ? 'Wave' : data.operateur === 'orange' ? 'Orange Money' : 'MTN MoMo';
+        html += `<tr>
+          <td><strong>${id}</strong></td>
+          <td>${data.telephone}</td>
+          <td><span class="op-badge">${opIco} ${opNom}</span></td>
+          <td>${data.date || '—'}</td>
+          <td>
+            <div class="actions">
+              <button class="btn-valider" onclick="validerPaiement('${id}')">✅ Valider</button>
+              <button class="btn-whatsapp" onclick="voirPreuve('${data.telephone}')">📲 Voir preuve</button>
+              <button class="btn-rejeter" onclick="rejeterPaiement('${id}')">❌ Rejeter</button>
+            </div>
+          </td>
+        </tr>`;
+      }
+      html += '</tbody></table>';
+      tblAttente.innerHTML = html;
+    }
+
+    // Table validés
+    const tblValides = document.getElementById('tableValides');
+    if (nbValides === 0) {
+      tblValides.innerHTML = '<div class="empty-state"><div class="ico">✅</div><p>Aucun compte activé pour le moment</p></div>';
+    } else {
+      let html = '<table><thead><tr><th>ID Client</th><th>Téléphone</th><th>Opérateur</th><th>Code envoyé</th><th>Date</th><th>Action</th></tr></thead><tbody>';
+      for (const [id, data] of Object.entries(valides)) {
+        const opIco = data.operateur === 'wave' ? '🌊' : data.operateur === 'orange' ? '🟠' : '🟡';
+        const opNom = data.operateur === 'wave' ? 'Wave' : data.operateur === 'orange' ? 'Orange Money' : 'MTN MoMo';
+        html += `<tr>
+          <td><strong>${id}</strong></td>
+          <td>${data.telephone}</td>
+          <td><span class="op-badge">${opIco} ${opNom}</span></td>
+          <td><span class="badge valide">${data.code}</span></td>
+          <td>${data.dateValidation || '—'}</td>
+          <td>
+            <button class="btn-whatsapp" onclick="renvoyerCode('${id}')">📲 Renvoyer</button>
+          </td>
+        </tr>`;
+      }
+      html += '</tbody></table>';
+      tblValides.innerHTML = html;
+    }
+  }
+
+  // ── VALIDER UN PAIEMENT ─────────────────────────────
+  function validerPaiement(id) {
+    const enAttente = JSON.parse(localStorage.getItem('paiementsEnAttente') || '{}');
+    const client = enAttente[id];
+    if (!client) return;
+
+    // Générer code à 6 chiffres
+    const code = Math.floor(100000 + Math.random() * 900000).toString();
+
+    // Déplacer vers validés
+    const valides = JSON.parse(localStorage.getItem('paiementsValides') || '{}');
+    valides[id] = { ...client, code, dateValidation: new Date().toLocaleString('fr-FR'), statut: 'valide' };
+    localStorage.setItem('paiementsValides', JSON.stringify(valides));
+
+    // Enregistrer le code dans codes_confirmation (localStorage pour simulation)
+    const codes = JSON.parse(localStorage.getItem('codes_confirmation') || '{}');
+    codes[client.telephone] = { code, identifiant: id, utilise: false };
+    localStorage.setItem('codes_confirmation', JSON.stringify(codes));
+
+    // Supprimer de en attente
+    delete enAttente[id];
+    localStorage.setItem('paiementsEnAttente', JSON.stringify(enAttente));
+
+    // Afficher modal avec code
+    afficherModal(id, client, code);
+    chargerDonnees();
+  }
+
+  // ── REJETER UN PAIEMENT ─────────────────────────────
+  function rejeterPaiement(id) {
+    if (!confirm('Confirmer le rejet de ce paiement ?')) return;
+    const enAttente = JSON.parse(localStorage.getItem('paiementsEnAttente') || '{}');
+    const client = enAttente[id];
+
+    const rejetes = JSON.parse(localStorage.getItem('paiementsRejetes') || '{}');
+    rejetes[id] = { ...client, dateRejet: new Date().toLocaleString('fr-FR'), statut: 'rejete' };
+    localStorage.setItem('paiementsRejetes', JSON.stringify(rejetes));
+
+    delete enAttente[id];
+    localStorage.setItem('paiementsEnAttente', JSON.stringify(enAttente));
+
+    // Notifier le client sur WhatsApp
+    const msg = encodeURIComponent(
+      `❌ *GestionScolaire-CI*\n\n` +
+      `Bonjour,\n\nVotre demande d'activation (ID: ${id}) a été rejetée.\n\n` +
+      `La preuve de paiement fournie n'a pas pu être vérifiée.\n\n` +
+      `Veuillez recommencer ou contacter le support.`
+    );
+    window.open(`https://wa.me/225${client.telephone}?text=${msg}`, '_blank');
+    chargerDonnees();
+  }
+
+  // ── VOIR PREUVE ─────────────────────────────────────
+  function voirPreuve(telephone) {
+    const msg = encodeURIComponent(`Bonjour, pouvez-vous m'envoyer votre preuve de paiement ?`);
+    window.open(`https://wa.me/225${telephone}?text=${msg}`, '_blank');
+  }
+
+  // ── RENVOYER CODE ───────────────────────────────────
+  function renvoyerCode(id) {
+    const valides = JSON.parse(localStorage.getItem('paiementsValides') || '{}');
+    const client = valides[id];
+    if (!client) return;
+    afficherModal(id, client, client.code);
+  }
+
+  // ── MODAL ───────────────────────────────────────────
+  function afficherModal(id, client, code) {
+    document.getElementById('codeAffiche').textContent = code;
+
+    const opNom = client.operateur === 'wave' ? 'Wave' : client.operateur === 'orange' ? 'Orange Money' : 'MTN MoMo';
+    document.getElementById('clientInfoModal').innerHTML = `
+      <div class="client-info-row"><span class="key">ID Client</span><span class="val">${id}</span></div>
+      <div class="client-info-row"><span class="key">Téléphone</span><span class="val">${client.telephone}</span></div>
+      <div class="client-info-row"><span class="key">Opérateur</span><span class="val">${opNom}</span></div>
+      <div class="client-info-row"><span class="key">Montant</span><span class="val" style="color:var(--vert)">5 000 FCFA ✅</span></div>
+    `;
+
+    const msg = encodeURIComponent(
+      `✅ *GestionScolaire-CI — Compte activé !*\n\n` +
+      `Bonjour !\n\nVotre paiement de *5 000 FCFA* a été vérifié et validé.\n\n` +
+      `🔑 Votre identifiant : *${id}*\n` +
+      `🔐 Votre code d'activation : *${code}*\n\n` +
+      `Rendez-vous sur le site pour créer votre mot de passe :\n` +
+      `👉 https://ecole-gestion-ci.netlify.app\n\n` +
+      `⚠️ Ce code expire dans 24h.`
+    );
+    document.getElementById('btnEnvoyerWA').href = `https://wa.me/225${client.telephone}?text=${msg}`;
+
+    document.getElementById('modalOverlay').style.display = 'block';
+    const m = document.getElementById('modal');
+    m.style.display = 'block';
+    setTimeout(() => m.classList.add('show'), 10);
+  }
+
+  function fermerModal() {
+    const m = document.getElementById('modal');
+    m.classList.remove('show');
+    setTimeout(() => {
+      m.style.display = 'none';
+      document.getElementById('modalOverlay').style.display = 'none';
+    }, 300);
+  }
+</script>
+</body>
+</html>
