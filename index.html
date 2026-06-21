@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Administration — GestionScolaire CI</title>
+  <title>Gestion Scolaire — République de Côte d'Ivoire</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -11,76 +11,248 @@
       --orange-light: #FF8C2F;
       --vert: #00843D;
       --vert-light: #00A84F;
-      --rouge: #E53E3E;
+      --blanc: #FFFFFF;
       --bleu: #0A1F44;
       --bleu-mid: #1A3A6B;
-      --blanc: #FFFFFF;
+      --or: #C8A84B;
       --gris-bg: #F4F6FA;
+      --gris-card: #FFFFFF;
       --gris-bord: #E2E8F0;
       --texte: #1A2B4A;
       --texte-doux: #5A6A82;
-      --shadow-sm: 0 1px 3px rgba(10,31,68,0.08);
-      --shadow-md: 0 4px 12px rgba(10,31,68,0.10);
-      --shadow-lg: 0 12px 32px rgba(10,31,68,0.14);
+      --shadow-sm: 0 1px 3px rgba(10,31,68,0.08), 0 1px 2px rgba(10,31,68,0.06);
+      --shadow-md: 0 4px 12px rgba(10,31,68,0.10), 0 2px 4px rgba(10,31,68,0.06);
+      --shadow-lg: 0 12px 32px rgba(10,31,68,0.14), 0 4px 8px rgba(10,31,68,0.08);
+      --shadow-xl: 0 24px 64px rgba(10,31,68,0.18), 0 8px 16px rgba(10,31,68,0.10);
       --radius: 12px;
       --radius-lg: 18px;
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Inter', sans-serif; background: var(--gris-bg); color: var(--texte); min-height: 100vh; }
 
-    /* ── LOGIN ADMIN ── */
-    #loginAdmin {
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--gris-bg);
+      color: var(--texte);
       min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ═══════════════════════════════════════
+       ÉCRAN DE CONNEXION
+    ═══════════════════════════════════════ */
+    #loginScreen {
+      display: flex;
+      min-height: 100vh;
+      background: var(--bleu);
+    }
+
+    .login-left {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 40px;
+      background: linear-gradient(160deg, var(--bleu) 0%, var(--bleu-mid) 50%, #0E2D5E 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .login-left::before {
+      content: '';
+      position: absolute;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(232,96,10,0.18) 0%, transparent 70%);
+      top: -100px; left: -100px;
+    }
+    .login-left::after {
+      content: '';
+      position: absolute;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(0,132,61,0.18) 0%, transparent 70%);
+      bottom: -80px; right: -80px;
+    }
+
+    .login-drapeau {
+      display: flex;
+      width: 80px; height: 14px;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 32px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+      position: relative; z-index: 1;
+    }
+    .login-drapeau div { flex: 1; }
+    .login-drapeau .d1 { background: var(--orange); }
+    .login-drapeau .d2 { background: #FFFFFF; }
+    .login-drapeau .d3 { background: var(--vert); }
+
+    .login-logo-title {
+      position: relative; z-index: 1;
+      text-align: center;
+    }
+    .login-logo-title .badge-pays {
+      display: inline-block;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 50px;
+      padding: 6px 20px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 2.5px;
+      color: rgba(255,255,255,0.7);
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .login-logo-title h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(24px, 3vw, 36px);
+      color: #FFFFFF;
+      font-weight: 900;
+      line-height: 1.15;
+      margin-bottom: 12px;
+    }
+    .login-logo-title h1 span { color: var(--orange-light); }
+    .login-logo-title p {
+      font-size: 13px;
+      color: rgba(255,255,255,0.55);
+      font-weight: 400;
+      line-height: 1.6;
+      max-width: 340px;
+    }
+
+    .login-features {
+      position: relative; z-index: 1;
+      margin-top: 48px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .login-feature {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 10px;
+      padding: 12px 18px;
+    }
+    .login-feature .ico {
+      width: 36px; height: 36px;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+    .login-feature .ico.orange { background: rgba(232,96,10,0.25); }
+    .login-feature .ico.vert { background: rgba(0,132,61,0.25); }
+    .login-feature .ico.or { background: rgba(200,168,75,0.25); }
+    .login-feature .txt { font-size: 12px; color: rgba(255,255,255,0.75); font-weight: 500; }
+
+    .login-right {
+      width: 480px;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: linear-gradient(135deg, var(--bleu) 0%, var(--bleu-mid) 100%);
-      padding: 20px;
+      padding: 60px 40px;
+      background: var(--blanc);
     }
-    .login-card {
-      background: white;
-      border-radius: var(--radius-lg);
-      padding: 40px 36px;
+
+    .login-form-box {
       width: 100%;
-      max-width: 380px;
-      box-shadow: var(--shadow-lg);
+      max-width: 360px;
     }
-    .login-card .drapeau {
-      display: flex;
-      width: 40px; height: 8px;
-      border-radius: 4px;
-      overflow: hidden;
-      margin-bottom: 20px;
+    .login-form-box .titre {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--bleu);
+      margin-bottom: 6px;
     }
-    .login-card .drapeau div { flex: 1; }
-    .login-card h1 { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--bleu); font-weight: 900; margin-bottom: 4px; }
-    .login-card p { font-size: 12px; color: var(--texte-doux); margin-bottom: 28px; }
-    .field { margin-bottom: 16px; }
-    .field label { display: block; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--texte); margin-bottom: 6px; }
-    .field input {
-      width: 100%; padding: 12px 14px;
+    .login-form-box .sous-titre {
+      font-size: 13px;
+      color: var(--texte-doux);
+      margin-bottom: 36px;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--texte);
+      letter-spacing: 0.5px;
+      margin-bottom: 7px;
+      text-transform: uppercase;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 13px 16px;
       border: 1.5px solid var(--gris-bord);
       border-radius: var(--radius);
       font-family: 'Inter', sans-serif;
-      font-size: 14px; color: var(--texte);
-      background: var(--gris-bg); outline: none;
-      transition: all 0.2s;
+      font-size: 14px;
+      color: var(--texte);
+      background: var(--gris-bg);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
     }
-    .field input:focus { border-color: var(--orange); background: #fff; box-shadow: 0 0 0 3px rgba(232,96,10,0.12); }
-    .err { display: none; background: #FFF5F5; border: 1px solid #FEB2B2; border-radius: 8px; padding: 9px 14px; font-size: 12px; color: #C53030; font-weight: 500; margin-bottom: 14px; }
-    .btn-primary {
-      width: 100%; padding: 13px;
-      background: linear-gradient(135deg, var(--bleu), var(--bleu-mid));
-      color: white; border: none; border-radius: var(--radius);
-      font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 700;
-      cursor: pointer; transition: all 0.25s;
-      box-shadow: 0 4px 16px rgba(10,31,68,0.25);
+    .form-group input:focus {
+      border-color: var(--orange);
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(232,96,10,0.12);
     }
-    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(10,31,68,0.35); }
+    .form-group input::placeholder { color: #A0AEC0; }
 
-    /* ── DASHBOARD ADMIN ── */
-    #dashAdmin { display: none; }
+    #loginError {
+      display: none;
+      background: #FFF5F5;
+      border: 1px solid #FEB2B2;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 12px;
+      color: #C53030;
+      font-weight: 500;
+      margin-bottom: 18px;
+    }
 
+    .btn-login {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, var(--orange) 0%, var(--orange-light) 100%);
+      color: white;
+      border: none;
+      border-radius: var(--radius);
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.5px;
+      box-shadow: 0 4px 16px rgba(232,96,10,0.35);
+      transition: all 0.25s;
+      margin-bottom: 12px;
+    }
+    .btn-login:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(232,96,10,0.45);
+    }
+    .btn-login:active { transform: translateY(0); }
+
+    .login-hint {
+      text-align: center;
+      font-size: 11px;
+      color: var(--texte-doux);
+      margin-top: 20px;
+      line-height: 1.5;
+    }
+
+    /* ═══════════════════════════════════════
+       DASHBOARD (caché au départ)
+    ═══════════════════════════════════════ */
+    #dashboard { display: none; min-height: 100vh; }
+
+    /* TOPBAR */
     .topbar {
       background: var(--blanc);
       border-bottom: 1px solid var(--gris-bord);
@@ -89,477 +261,1770 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      position: sticky; top: 0; z-index: 100;
+      position: sticky;
+      top: 0;
+      z-index: 100;
       box-shadow: var(--shadow-sm);
     }
-    .topbar-left { display: flex; align-items: center; gap: 12px; }
-    .topbar-drapeau { display: flex; width: 28px; height: 5px; border-radius: 3px; overflow: hidden; }
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .topbar-drapeau {
+      display: flex;
+      width: 32px; height: 6px;
+      border-radius: 3px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
     .topbar-drapeau div { flex: 1; }
-    .topbar-brand { font-size: 15px; font-weight: 800; color: var(--bleu); }
+    .topbar-brand {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--bleu);
+      letter-spacing: -0.3px;
+    }
     .topbar-brand span { color: var(--orange); }
-    .admin-badge { background: var(--bleu); color: white; border-radius: 50px; padding: 4px 12px; font-size: 11px; font-weight: 700; letter-spacing: 1px; }
-    .btn-logout { background: transparent; border: 1.5px solid var(--gris-bord); border-radius: 50px; padding: 7px 16px; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 600; color: var(--texte-doux); cursor: pointer; transition: all 0.2s; }
-    .btn-logout:hover { border-color: var(--rouge); color: var(--rouge); background: #FFF5F5; }
 
-    .main { max-width: 1000px; margin: 0 auto; padding: 28px 20px 60px; }
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .topbar-badge {
+      background: var(--gris-bg);
+      border: 1px solid var(--gris-bord);
+      border-radius: 50px;
+      padding: 6px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--texte-doux);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-deconnexion {
+      background: transparent;
+      border: 1.5px solid var(--gris-bord);
+      border-radius: 50px;
+      padding: 7px 16px;
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--texte-doux);
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-deconnexion:hover {
+      border-color: #E53E3E;
+      color: #E53E3E;
+      background: #FFF5F5;
+    }
+
+    /* CONTENU PRINCIPAL */
+    .main-content {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 32px 24px 60px;
+    }
+
+    /* BANNIÈRE ÉCOLE */
+    .ecole-banner {
+      background: linear-gradient(135deg, var(--bleu) 0%, var(--bleu-mid) 60%, #163A7A 100%);
+      border-radius: var(--radius-lg);
+      padding: 32px 36px;
+      margin-bottom: 28px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+    }
+    .ecole-banner::before {
+      content: '';
+      position: absolute;
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(232,96,10,0.2) 0%, transparent 65%);
+      top: -80px; right: -60px;
+    }
+    .ecole-banner::after {
+      content: '';
+      position: absolute;
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, rgba(0,132,61,0.2) 0%, transparent 65%);
+      bottom: -60px; left: 30px;
+    }
+    .banner-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 8px;
+      position: relative; z-index: 1;
+    }
+    .banner-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(20px, 3vw, 30px);
+      font-weight: 900;
+      color: #FFFFFF;
+      line-height: 1.2;
+      margin-bottom: 4px;
+      position: relative; z-index: 1;
+    }
+    .banner-title span { color: var(--orange-light); }
+    .banner-sub {
+      font-size: 12px;
+      color: rgba(255,255,255,0.5);
+      position: relative; z-index: 1;
+      margin-bottom: 28px;
+    }
+
+    /* CHAMPS ÉTABLISSEMENT DANS LA BANNIÈRE */
+    .etab-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      position: relative; z-index: 1;
+    }
+    .etab-field {
+      position: relative;
+    }
+    .etab-field label {
+      display: block;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 5px;
+    }
+    .etab-field input {
+      width: 100%;
+      background: rgba(255,255,255,0.10);
+      border: 1px solid rgba(255,255,255,0.20);
+      border-radius: 9px;
+      padding: 10px 14px;
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      color: #FFFFFF;
+      outline: none;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .etab-field input::placeholder { color: rgba(255,255,255,0.30); }
+    .etab-field input:focus {
+      border-color: var(--orange-light);
+      background: rgba(255,255,255,0.16);
+    }
+
+    .etab-dropdown {
+      display: none;
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0; right: 0;
+      background: #FFFFFF;
+      border: 1.5px solid var(--gris-bord);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
+      max-height: 200px;
+      overflow-y: auto;
+      z-index: 600;
+      list-style: none;
+      padding: 6px 0;
+    }
+    .etab-dropdown li {
+      padding: 9px 14px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--texte);
+      cursor: pointer;
+      transition: background 0.12s;
+      border-radius: 6px;
+      margin: 0 4px;
+    }
+    .etab-dropdown li:hover { background: #FFF3E8; color: var(--orange); }
 
     /* STATS */
-    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 28px; }
-    .stat-card { background: white; border: 1px solid var(--gris-bord); border-radius: var(--radius); padding: 16px; display: flex; align-items: center; gap: 12px; box-shadow: var(--shadow-sm); }
-    .stat-ico { width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+    .stat-card {
+      background: var(--gris-card);
+      border: 1px solid var(--gris-bord);
+      border-radius: var(--radius);
+      padding: 18px 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .stat-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+    .stat-ico {
+      width: 44px; height: 44px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
     .stat-ico.orange { background: #FFF0E6; }
-    .stat-ico.vert { background: #E6F7EE; }
-    .stat-ico.rouge { background: #FFF5F5; }
-    .stat-ico.bleu { background: #EBF0FF; }
-    .stat-num { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 900; color: var(--bleu); line-height: 1; }
-    .stat-label { font-size: 11px; font-weight: 500; color: var(--texte-doux); margin-top: 2px; }
+    .stat-ico.vert   { background: #E6F7EE; }
+    .stat-ico.rose   { background: #FFF0F5; }
+    .stat-ico.bleu   { background: #EBF0FF; }
+    .stat-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 26px;
+      font-weight: 900;
+      color: var(--bleu);
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--texte-doux);
+      margin-top: 2px;
+    }
 
-    /* SECTION */
-    .section-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
-    .section-head-left { display: flex; align-items: center; gap: 10px; }
-    .bar { width: 4px; height: 20px; border-radius: 3px; background: linear-gradient(to bottom, var(--orange), var(--vert)); flex-shrink: 0; }
-    .section-head h2 { font-size: 14px; font-weight: 700; color: var(--texte); }
+    /* SECTIONS */
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+      margin-top: 8px;
+    }
+    .section-header .bar {
+      width: 4px; height: 20px;
+      border-radius: 3px;
+      background: linear-gradient(to bottom, var(--orange), var(--vert));
+      flex-shrink: 0;
+    }
+    .section-header h2 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--texte);
+      letter-spacing: -0.2px;
+    }
+    .section-header .count-badge {
+      background: var(--gris-bg);
+      border: 1px solid var(--gris-bord);
+      border-radius: 50px;
+      padding: 2px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--texte-doux);
+    }
 
-    .btn-refresh { background: var(--gris-bg); border: 1.5px solid var(--gris-bord); border-radius: 50px; padding: 7px 16px; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 600; color: var(--texte-doux); cursor: pointer; transition: all 0.2s; }
-    .btn-refresh:hover { border-color: var(--bleu); color: var(--bleu); }
+    /* BOUTON INFOS ÉLÈVES */
+    .btn-infos-eleves {
+      width: 100%;
+      background: var(--blanc);
+      border: 1.5px solid var(--gris-bord);
+      border-radius: var(--radius-lg);
+      padding: 18px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: all 0.25s;
+      margin-bottom: 28px;
+      box-shadow: var(--shadow-sm);
+      text-align: left;
+    }
+    .btn-infos-eleves:hover {
+      border-color: var(--orange);
+      box-shadow: 0 0 0 3px rgba(232,96,10,0.10), var(--shadow-md);
+      transform: translateY(-2px);
+    }
+    .btn-infos-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .btn-infos-icon {
+      width: 48px; height: 48px;
+      background: linear-gradient(135deg, var(--orange), var(--orange-light));
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+      box-shadow: 0 4px 12px rgba(232,96,10,0.3);
+      flex-shrink: 0;
+    }
+    .btn-infos-txt .titre-btn { font-size: 14px; font-weight: 700; color: var(--texte); margin-bottom: 2px; }
+    .btn-infos-txt .sous-btn { font-size: 12px; color: var(--texte-doux); font-weight: 400; }
+    .btn-infos-arrow {
+      width: 36px; height: 36px;
+      background: var(--gris-bg);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+      color: var(--texte-doux);
+      transition: all 0.2s;
+    }
+    .btn-infos-eleves:hover .btn-infos-arrow {
+      background: var(--orange);
+      color: white;
+      transform: translateX(3px);
+    }
 
-    /* TABLE */
-    .table-box { background: white; border: 1px solid var(--gris-bord); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-sm); margin-bottom: 28px; }
-    .table-box table { width: 100%; border-collapse: collapse; }
-    .table-box th { background: var(--gris-bg); padding: 12px 16px; text-align: left; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--texte-doux); border-bottom: 1px solid var(--gris-bord); }
-    .table-box td { padding: 14px 16px; font-size: 13px; border-bottom: 1px solid var(--gris-bord); vertical-align: middle; }
-    .table-box tr:last-child td { border-bottom: none; }
-    .table-box tr:hover td { background: #FAFBFF; }
+    /* GRILLE CLASSES */
+    .classes-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-bottom: 32px;
+    }
+    .classe-card {
+      background: var(--blanc);
+      border: 1.5px solid var(--gris-bord);
+      border-radius: var(--radius-lg);
+      padding: 22px 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+      box-shadow: var(--shadow-sm);
+      position: relative;
+      overflow: hidden;
+    }
+    .classe-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 3px;
+      border-radius: 0 0 12px 12px;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .classe-card.cp::after  { background: linear-gradient(90deg, var(--orange), var(--orange-light)); }
+    .classe-card.ce::after  { background: linear-gradient(90deg, var(--vert), var(--vert-light)); }
+    .classe-card.cm::after  { background: linear-gradient(90deg, var(--bleu), var(--bleu-mid)); }
 
-    .badge { display: inline-block; border-radius: 50px; padding: 3px 10px; font-size: 11px; font-weight: 700; }
-    .badge.attente { background: #FFF3CD; color: #856404; }
-    .badge.valide { background: #D4EDDA; color: #155724; }
-    .badge.rejete { background: #F8D7DA; color: #721C24; }
+    .classe-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-lg);
+      border-color: transparent;
+    }
+    .classe-card:hover::after { opacity: 1; }
+    .classe-card:active { transform: translateY(-2px); }
 
-    .op-badge { display: inline-flex; align-items: center; gap: 5px; background: var(--gris-bg); border: 1px solid var(--gris-bord); border-radius: 50px; padding: 3px 10px; font-size: 11px; font-weight: 600; }
+    .cls-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 52px; height: 52px;
+      border-radius: 14px;
+      font-size: 22px;
+      margin-bottom: 12px;
+    }
+    .cp .cls-badge  { background: #FFF0E6; }
+    .ce .cls-badge  { background: #E6F7EE; }
+    .cm .cls-badge  { background: #EBF0FF; }
 
-    /* ACTIONS */
-    .actions { display: flex; gap: 6px; flex-wrap: wrap; }
-    .btn-valider { background: linear-gradient(135deg, var(--vert), var(--vert-light)); color: white; border: none; border-radius: 8px; padding: 8px 14px; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
-    .btn-valider:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,132,61,0.3); }
-    .btn-rejeter { background: var(--gris-bg); color: var(--rouge); border: 1.5px solid #FEB2B2; border-radius: 8px; padding: 8px 14px; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
-    .btn-rejeter:hover { background: #FFF5F5; }
-    .btn-whatsapp { background: #25D366; color: white; border: none; border-radius: 8px; padding: 8px 14px; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
-    .btn-whatsapp:hover { background: #1da851; transform: translateY(-1px); }
+    .cls-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      font-weight: 900;
+      color: var(--bleu);
+      display: block;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .cls-sub {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--texte-doux);
+      display: block;
+    }
 
-    .empty-state { text-align: center; padding: 48px 20px; color: var(--texte-doux); }
-    .empty-state .ico { font-size: 40px; margin-bottom: 12px; }
-    .empty-state p { font-size: 13px; }
+    /* FOOTER */
+    .footer {
+      border-top: 1px solid var(--gris-bord);
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--blanc);
+      margin-top: 20px;
+    }
+    .footer-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .footer-drapeau {
+      display: flex;
+      width: 24px; height: 5px;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .footer-drapeau div { flex: 1; }
+    .footer-txt { font-size: 11px; color: var(--texte-doux); font-weight: 500; }
+    .footer-version {
+      font-size: 11px;
+      color: var(--texte-doux);
+      background: var(--gris-bg);
+      border: 1px solid var(--gris-bord);
+      border-radius: 50px;
+      padding: 3px 10px;
+      font-weight: 600;
+    }
 
-    /* MODAL CODE */
-    #modalOverlay { display: none; position: fixed; inset: 0; background: rgba(10,31,68,0.5); backdrop-filter: blur(4px); z-index: 998; }
-    #modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%) scale(0.9); background: white; border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); width: 400px; max-width: 95vw; z-index: 999; opacity: 0; transition: all 0.3s cubic-bezier(0.22,1,0.36,1); overflow: hidden; }
-    #modal.show { opacity: 1; transform: translate(-50%,-50%) scale(1); }
-    .modal-header { background: linear-gradient(135deg, var(--vert), var(--vert-light)); padding: 24px; color: white; }
-    .modal-header h3 { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 900; margin-bottom: 4px; }
-    .modal-header p { font-size: 12px; opacity: 0.8; }
-    .modal-body { padding: 24px; }
-    .code-genere { background: var(--gris-bg); border: 2px dashed var(--vert); border-radius: var(--radius); padding: 20px; text-align: center; margin-bottom: 16px; }
-    .code-genere .label { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--texte-doux); margin-bottom: 8px; }
-    .code-genere .code { font-family: 'Playfair Display', serif; font-size: 36px; font-weight: 900; color: var(--vert); letter-spacing: 8px; }
-    .client-info { background: var(--gris-bg); border-radius: var(--radius); padding: 14px; margin-bottom: 16px; }
-    .client-info-row { display: flex; justify-content: space-between; font-size: 13px; padding: 4px 0; }
-    .client-info-row .key { color: var(--texte-doux); }
-    .client-info-row .val { font-weight: 600; color: var(--bleu); }
-    .modal-actions { display: flex; gap: 10px; }
-    .btn-envoyer-wa { flex: 1; background: #25D366; color: white; border: none; border-radius: var(--radius); padding: 12px; font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 6px; }
-    .btn-envoyer-wa:hover { background: #1da851; }
-    .btn-fermer-modal { background: var(--gris-bg); border: 1.5px solid var(--gris-bord); border-radius: var(--radius); padding: 12px 20px; font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600; color: var(--texte-doux); cursor: pointer; transition: all 0.2s; }
-    .btn-fermer-modal:hover { border-color: var(--rouge); color: var(--rouge); }
+    /* FICHE ÉLÈVE */
+    #overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(10,31,68,0.45);
+      backdrop-filter: blur(5px);
+      z-index: 998;
+    }
+    #ficheEleve {
+      display: none;
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%) scale(0.9);
+      background: white;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-xl);
+      width: 380px;
+      max-width: 95vw;
+      z-index: 999;
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+      overflow: hidden;
+    }
+    #ficheEleve.show { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    .fiche-header {
+      background: linear-gradient(135deg, var(--bleu) 0%, var(--bleu-mid) 100%);
+      padding: 28px 24px 22px;
+      text-align: center;
+      position: relative;
+    }
+    .fiche-header::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--orange), var(--vert));
+    }
+    #fichePhoto {
+      width: 76px; height: 76px;
+      border-radius: 50%;
+      border: 3px solid rgba(255,255,255,0.3);
+      object-fit: cover;
+      display: block;
+      margin: 0 auto 10px;
+    }
+    .fiche-nom { font-family: 'Playfair Display', serif; font-size: 19px; color: white; font-weight: 700; }
+    .fiche-classe-badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.15);
+      color: rgba(255,255,255,0.9);
+      border-radius: 20px;
+      padding: 3px 14px;
+      font-size: 11px;
+      font-weight: 600;
+      margin-top: 6px;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    .fiche-body { padding: 20px 24px; }
+    .fiche-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 9px 0;
+      border-bottom: 1px solid var(--gris-bord);
+      font-size: 13px;
+    }
+    .fiche-key { color: var(--texte-doux); font-weight: 500; }
+    .fiche-val { color: var(--bleu); font-weight: 600; }
+    .fiche-notes {
+      background: var(--gris-bg);
+      border-radius: var(--radius);
+      padding: 12px 16px;
+      margin: 12px 0;
+    }
+    .fiche-notes-title {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--texte-doux);
+      margin-bottom: 8px;
+    }
+    .note-line {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      padding: 4px 0;
+    }
+    .note-val { font-weight: 700; color: var(--bleu); }
+    .moy-box {
+      background: linear-gradient(135deg, var(--orange), var(--vert));
+      color: white;
+      border-radius: var(--radius);
+      padding: 10px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      font-weight: 600;
+      font-size: 13px;
+    }
+    .moy-num { font-family: 'Playfair Display', serif; font-size: 22px; }
+    .btn-fermer {
+      width: 100%;
+      padding: 12px;
+      background: var(--gris-bg);
+      border: 1.5px solid var(--gris-bord);
+      border-radius: var(--radius);
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 13px;
+      color: var(--texte-doux);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-fermer:hover { background: #fee; border-color: #fca5a5; color: #C53030; }
 
+    /* RESPONSIVE */
     @media (max-width: 700px) {
-      .stats { grid-template-columns: repeat(2, 1fr); }
-      .table-box { overflow-x: auto; }
-      .table-box table { min-width: 600px; }
+      .login-left { display: none; }
+      .login-right { width: 100%; padding: 40px 24px; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .classes-grid { grid-template-columns: repeat(2, 1fr); }
+      .etab-grid { grid-template-columns: 1fr; }
+      .topbar-badge { display: none; }
+      .ecole-banner { padding: 24px 20px; }
+      .main-content { padding: 20px 16px 60px; }
+    }
+    @media (max-width: 400px) {
+      .classes-grid { grid-template-columns: repeat(2, 1fr); }
     }
   </style>
 </head>
 <body>
 
-<!-- ═══ LOGIN ADMIN ═══ -->
-<div id="loginAdmin">
-  <div class="login-card">
-    <div class="drapeau">
-      <div style="background:#E8600A"></div>
-      <div style="background:#fff;border:1px solid #eee"></div>
-      <div style="background:#00843D"></div>
+<!-- ═══════════════ LOGIN ═══════════════ -->
+<div id="loginScreen">
+  <div class="login-left">
+    <div class="login-drapeau"><div class="d1"></div><div class="d2"></div><div class="d3"></div></div>
+    <div class="login-logo-title">
+      <div class="badge-pays">🇨🇮 République de Côte d'Ivoire</div>
+      <h1>Système de <span>Gestion</span><br>Scolaire</h1>
+      <p>Plateforme numérique de gestion des établissements primaires — Ministère de l'Éducation Nationale</p>
     </div>
-    <h1>Espace Administrateur</h1>
-    <p>Gestion des paiements et activation des comptes</p>
-    <div class="err" id="errLogin">⚠️ Mot de passe incorrect.</div>
-    <div class="field">
-      <label>Mot de passe admin</label>
-      <input type="password" id="mdpAdmin" placeholder="••••••••"
-        onkeydown="if(event.key==='Enter')loginAdmin()">
+    <div class="login-features">
+      <div class="login-feature">
+        <div class="ico orange">📊</div>
+        <div class="txt">Suivi des effectifs et statistiques en temps réel</div>
+      </div>
+      <div class="login-feature">
+        <div class="ico vert">👥</div>
+        <div class="txt">Gestion complète des informations élèves</div>
+      </div>
+      <div class="login-feature">
+        <div class="ico or">📋</div>
+        <div class="txt">Accès structuré par classe (CP1 à CM2)</div>
+      </div>
     </div>
-    <button class="btn-primary" onclick="loginAdmin()">Accéder au tableau de bord →</button>
+  </div>
+
+  <div class="login-right">
+    <div class="login-form-box">
+      <div class="titre">Connexion</div>
+      <div class="sous-titre">Veuillez vous identifier pour accéder à la plateforme.</div>
+
+      <div id="loginError">⚠️ Identifiant ou mot de passe incorrect.</div>
+
+      <div class="form-group">
+        <label>Identifiant</label>
+        <input type="text" id="loginUser" placeholder="Entrez votre identifiant" autocomplete="username">
+      </div>
+      <div class="form-group">
+        <label>Mot de passe</label>
+        <input type="password" id="loginPass" placeholder="••••••••" autocomplete="current-password"
+          onkeydown="if(event.key==='Enter')seConnecter()">
+      </div>
+
+      <button class="btn-login" onclick="seConnecter()">Se connecter →</button>
+
+      <div style="text-align:center;margin:14px 0 4px;">
+        <span style="font-size:12px;color:#5A6A82;">Pas encore de compte ? </span>
+        <a onclick="ouvrirPaiement()" style="font-size:12px;font-weight:700;color:#E8600A;cursor:pointer;">Créer un compte (5 000 FCFA) →</a>
+      </div>
+
+      <div class="login-hint">
+        Accès réservé au personnel autorisé.<br>
+        En cas de problème, contactez votre administrateur.
+      </div>
+    </div>
   </div>
 </div>
 
-<!-- ═══ DASHBOARD ADMIN ═══ -->
-<div id="dashAdmin">
+<!-- ═══════════════ DASHBOARD ═══════════════ -->
+<div id="dashboard">
 
+  <!-- TOPBAR -->
   <div class="topbar">
     <div class="topbar-left">
       <div class="topbar-drapeau">
-        <div style="background:#E8600A"></div>
-        <div style="background:#fff"></div>
-        <div style="background:#00843D"></div>
+        <div style="background:var(--orange);flex:1"></div>
+        <div style="background:#fff;flex:1"></div>
+        <div style="background:var(--vert);flex:1"></div>
       </div>
       <div class="topbar-brand">Gestion<span>Scolaire</span></div>
-      <span class="admin-badge">⚙️ ADMIN</span>
     </div>
-    <button class="btn-logout" onclick="logoutAdmin()">⏻ Déconnexion</button>
+    <div class="topbar-right">
+      <div class="topbar-badge">👤 <span id="userLabel">Directeur</span></div>
+      <button class="btn-deconnexion" onclick="seDeconnecter()">⏻ Déconnexion</button>
+    </div>
   </div>
 
-  <div class="main">
+  <!-- CONTENU -->
+  <div class="main-content">
+
+    <!-- BANNIÈRE ÉCOLE -->
+    <div class="ecole-banner">
+      <div class="banner-label">🏫 Établissement</div>
+      <div class="banner-title">Informations de <span>l'École</span></div>
+      <div class="banner-sub">Renseignez les informations administratives de votre établissement</div>
+
+      <div class="etab-grid">
+        <!-- DRENAET -->
+        <div class="etab-field">
+          <label>🏛️ DRENAET</label>
+          <input id="champDREN" type="text" placeholder="Ex : DRENAET DIMBOKRO"
+            autocomplete="off"
+            oninput="filtrerDREN(this.value)"
+            onfocus="filtrerDREN(this.value)"
+            onblur="setTimeout(()=>document.getElementById('listeDREN').style.display='none',200)">
+          <ul class="etab-dropdown" id="listeDREN"></ul>
+        </div>
+        <!-- IEPP -->
+        <div class="etab-field">
+          <label>🏫 IEPP</label>
+          <input id="champIEP" type="text" placeholder="Choisir d'abord la DRENAET"
+            autocomplete="off"
+            oninput="filtrerIEP(this.value)"
+            onfocus="filtrerIEP(this.value)"
+            onblur="setTimeout(()=>document.getElementById('listeIEP').style.display='none',200)">
+          <ul class="etab-dropdown" id="listeIEP"></ul>
+        </div>
+        <!-- EPP -->
+        <div class="etab-field">
+          <label>🏠 EPP</label>
+          <input id="champEPP" type="text" placeholder="Ex : EPP DIANGOKRO 2"
+            oninput="this.value=this.value.toUpperCase();localStorage.setItem('champEPP',this.value)">
+        </div>
+        <!-- ANNÉE -->
+        <div class="etab-field">
+          <label>📅 Année scolaire</label>
+          <input id="champAnnee" type="text" placeholder="Ex : 2025-2026"
+            oninput="formatAnnee(this)">
+        </div>
+      </div>
+    </div>
 
     <!-- STATS -->
-    <div class="stats">
+    <div class="section-header">
+      <div class="bar"></div>
+      <h2>Tableau de bord</h2>
+    </div>
+    <div class="stats-grid">
       <div class="stat-card">
-        <div class="stat-ico orange">⏳</div>
+        <div class="stat-ico orange">👨‍🎓</div>
         <div>
-          <div class="stat-num" id="statAttente">0</div>
-          <div class="stat-label">En attente</div>
+          <div class="stat-num" id="statTotal">0</div>
+          <div class="stat-label">Total élèves</div>
         </div>
       </div>
       <div class="stat-card">
-        <div class="stat-ico vert">✅</div>
+        <div class="stat-ico bleu">👦</div>
         <div>
-          <div class="stat-num" id="statValides">0</div>
-          <div class="stat-label">Validés</div>
+          <div class="stat-num" id="statGarcons">0</div>
+          <div class="stat-label">Garçons</div>
         </div>
       </div>
       <div class="stat-card">
-        <div class="stat-ico rouge">❌</div>
+        <div class="stat-ico rose">👧</div>
         <div>
-          <div class="stat-num" id="statRejetes">0</div>
-          <div class="stat-label">Rejetés</div>
+          <div class="stat-num" id="statFilles">0</div>
+          <div class="stat-label">Filles</div>
         </div>
       </div>
       <div class="stat-card">
-        <div class="stat-ico bleu">💰</div>
+        <div class="stat-ico vert">🏫</div>
         <div>
-          <div class="stat-num" id="statRevenu">0</div>
-          <div class="stat-label">FCFA reçus</div>
+          <div class="stat-num">6</div>
+          <div class="stat-label">Classes</div>
         </div>
       </div>
     </div>
 
-    <!-- PAIEMENTS EN ATTENTE -->
-    <div class="section-head">
-      <div class="section-head-left">
-        <div class="bar"></div>
-        <h2>Paiements en attente de validation</h2>
+    <!-- INFOS ÉLÈVES -->
+    <div class="section-header">
+      <div class="bar"></div>
+      <h2>Dossiers élèves</h2>
+    </div>
+    <button class="btn-infos-eleves" onclick="ouvrirInfosEleves()">
+      <div class="btn-infos-left">
+        <div class="btn-infos-icon">📋</div>
+        <div class="btn-infos-txt">
+          <div class="titre-btn">Informations des élèves</div>
+          <div class="sous-btn">Consulter et gérer les fiches individuelles</div>
+        </div>
       </div>
-      <button class="btn-refresh" onclick="chargerDonnees()">🔄 Actualiser</button>
+      <div class="btn-infos-arrow">→</div>
+    </button>
+
+    <!-- CLASSES -->
+    <div class="section-header">
+      <div class="bar"></div>
+      <h2>Accès aux classes</h2>
+      <span class="count-badge">6 classes</span>
+    </div>
+    <div class="classes-grid">
+      <div class="classe-card cp" onclick="ouvrirClasse('cp1.html')">
+        <div class="cls-badge">🌱</div>
+        <span class="cls-name">CP1</span>
+        <span class="cls-sub">Cours Préparatoire</span>
+      </div>
+      <div class="classe-card cp" onclick="ouvrirClasse('cp2.html')">
+        <div class="cls-badge">🌿</div>
+        <span class="cls-name">CP2</span>
+        <span class="cls-sub">Cours Préparatoire</span>
+      </div>
+      <div class="classe-card ce" onclick="ouvrirClasse('ce1.html')">
+        <div class="cls-badge">📖</div>
+        <span class="cls-name">CE1</span>
+        <span class="cls-sub">Cours Élémentaire</span>
+      </div>
+      <div class="classe-card ce" onclick="ouvrirClasse('ce2.html')">
+        <div class="cls-badge">✏️</div>
+        <span class="cls-name">CE2</span>
+        <span class="cls-sub">Cours Élémentaire</span>
+      </div>
+      <div class="classe-card cm" onclick="ouvrirClasse('cm1.html')">
+        <div class="cls-badge">🎯</div>
+        <span class="cls-name">CM1</span>
+        <span class="cls-sub">Cours Moyen</span>
+      </div>
+      <div class="classe-card cm" onclick="ouvrirClasse('cm2.html')">
+        <div class="cls-badge">🏆</div>
+        <span class="cls-name">CM2</span>
+        <span class="cls-sub">Cours Moyen</span>
+      </div>
     </div>
 
-    <div class="table-box" id="tableAttente">
-      <div class="empty-state">
-        <div class="ico">⏳</div>
-        <p>Chargement...</p>
-      </div>
-    </div>
+  </div><!-- /main-content -->
 
-    <!-- PAIEMENTS VALIDÉS -->
-    <div class="section-head">
-      <div class="section-head-left">
-        <div class="bar"></div>
-        <h2>Comptes activés</h2>
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-left">
+      <div class="footer-drapeau">
+        <div style="background:var(--orange)"></div>
+        <div style="background:#fff;border-top:1px solid #eee;border-bottom:1px solid #eee"></div>
+        <div style="background:var(--vert)"></div>
       </div>
+      <span class="footer-txt">République de Côte d'Ivoire · Ministère de l'Éducation Nationale</span>
     </div>
-
-    <div class="table-box" id="tableValides">
-      <div class="empty-state">
-        <div class="ico">✅</div>
-        <p>Chargement...</p>
-      </div>
-    </div>
-
+    <span class="footer-version">v2.0</span>
   </div>
-</div>
 
-<!-- MODAL CODE -->
-<div id="modalOverlay" onclick="fermerModal()"></div>
-<div id="modal">
-  <div class="modal-header">
-    <h3>✅ Paiement validé</h3>
-    <p>Envoyez ce code au client via WhatsApp</p>
+</div><!-- /dashboard -->
+
+<!-- FICHE ÉLÈVE -->
+<div id="overlay" onclick="fermerFiche()"></div>
+<div id="ficheEleve">
+  <div class="fiche-header">
+    <img id="fichePhoto" src="" alt="photo">
+    <div class="fiche-nom" id="ficheNomComplet">—</div>
+    <div class="fiche-classe-badge" id="ficheClasseBadge">—</div>
   </div>
-  <div class="modal-body">
-    <div class="code-genere">
-      <div class="label">Code d'activation</div>
-      <div class="code" id="codeAffiche">------</div>
+  <div class="fiche-body">
+    <div class="fiche-row">
+      <span class="fiche-key">Sexe</span>
+      <span class="fiche-val" id="ficheSexe">—</span>
     </div>
-    <div class="client-info" id="clientInfoModal"></div>
-    <div class="modal-actions">
-      <a id="btnEnvoyerWA" href="#" target="_blank" class="btn-envoyer-wa">
-        📲 Envoyer sur WhatsApp
-      </a>
-      <button class="btn-fermer-modal" onclick="fermerModal()">Fermer</button>
+    <div class="fiche-row">
+      <span class="fiche-key">Date de naissance</span>
+      <span class="fiche-val" id="ficheDate">—</span>
     </div>
+    <div class="fiche-notes">
+      <div class="fiche-notes-title">📊 Notes</div>
+      <div class="note-line"><span>Français</span><span class="note-val" id="noteFr">0</span></div>
+      <div class="note-line"><span>Mathématiques</span><span class="note-val" id="noteMath">0</span></div>
+      <div class="note-line"><span>Sciences</span><span class="note-val" id="noteSci">0</span></div>
+    </div>
+    <div class="moy-box">
+      <span>Moyenne générale</span>
+      <span class="moy-num" id="ficheMoyenne">0.00</span>
+    </div>
+    <button class="btn-fermer" onclick="fermerFiche()">✕ Fermer la fiche</button>
   </div>
 </div>
 
 <script>
-  // ── SÉCURITÉ DOUBLE : CLÉ URL + MOT DE PASSE ────────
-  // Accès uniquement via : /admin.html?cle=GadeEcoleCI2025
-  const CLE_URL_REQUISE = 'GadeEcoleCI2025';
-  const MDP_ADMIN = 'Admin@EcoleCI2025!';
-  const MAX_TENTATIVES = 3;
-  let tentatives = parseInt(sessionStorage.getItem('tentatives') || '0');
+  /* ══════════════════════════════════
+     CONNEXION
+  ══════════════════════════════════ */
+  // Identifiants (modifiables ici)
+  const COMPTES = {
+    "directeur": "ecole2025",
+    "admin": "ci2025"
+  };
 
-  function verifierCleURL() {
-    const params = new URLSearchParams(window.location.search);
-    const cle = params.get('cle');
-    if (cle !== CLE_URL_REQUISE) {
-      // Rediriger vers page d'erreur 404 simulée
-      document.body.innerHTML = `
-        <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:#f4f6fa;font-family:Inter,sans-serif;">
-          <div style="text-align:center;color:#5A6A82;">
-            <div style="font-size:72px;margin-bottom:16px;">404</div>
-            <div style="font-size:18px;font-weight:700;color:#1A2B4A;margin-bottom:8px;">Page introuvable</div>
-            <div style="font-size:13px;">La page que vous cherchez n'existe pas.</div>
-            <a href="/" style="display:inline-block;margin-top:20px;color:#E8600A;font-weight:600;text-decoration:none;">← Retour à l'accueil</a>
-          </div>
-        </div>`;
-      return false;
-    }
-    return true;
-  }
-
-  function loginAdmin() {
-    const mdp = document.getElementById('mdpAdmin').value;
-    const err = document.getElementById('errLogin');
-
-    // Bloquer après 3 tentatives
-    if (tentatives >= MAX_TENTATIVES) {
-      err.style.display = 'block';
-      err.textContent = '🔒 Accès bloqué. Fermez et réouvrez la page.';
-      document.getElementById('mdpAdmin').disabled = true;
-      document.querySelector('.btn-primary').disabled = true;
-      return;
-    }
-
-    if (mdp === MDP_ADMIN) {
+  function seConnecter() {
+    const user = document.getElementById('loginUser').value.trim().toLowerCase();
+    const pass = document.getElementById('loginPass').value;
+    const err = document.getElementById('loginError');
+    if (COMPTES[user] && COMPTES[user] === pass) {
       err.style.display = 'none';
-      tentatives = 0;
-      sessionStorage.setItem('tentatives', '0');
-      sessionStorage.setItem('adminConnecte', '1');
-      document.getElementById('loginAdmin').style.display = 'none';
-      document.getElementById('dashAdmin').style.display = 'block';
-      chargerDonnees();
+      sessionStorage.setItem('userConnecte', user);
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('dashboard').style.display = 'block';
+      document.getElementById('userLabel').textContent = user.charAt(0).toUpperCase() + user.slice(1);
+      initialiserDashboard();
     } else {
-      tentatives++;
-      sessionStorage.setItem('tentatives', tentatives.toString());
-      const restantes = MAX_TENTATIVES - tentatives;
       err.style.display = 'block';
-      err.textContent = restantes > 0
-        ? '⚠️ Mot de passe incorrect. ' + restantes + ' tentative(s) restante(s).'
-        : '🔒 Accès bloqué. Trop de tentatives.';
-      document.getElementById('mdpAdmin').value = '';
-      if (tentatives >= MAX_TENTATIVES) {
-        document.getElementById('mdpAdmin').disabled = true;
-        document.querySelector('.btn-primary').disabled = true;
-      }
+      document.getElementById('loginPass').value = '';
+      document.getElementById('loginPass').focus();
     }
   }
 
-  function logoutAdmin() {
-    sessionStorage.removeItem('adminConnecte');
-    document.getElementById('dashAdmin').style.display = 'none';
-    document.getElementById('loginAdmin').style.display = 'flex';
+  function seDeconnecter() {
+    if (confirm('Voulez-vous vraiment vous déconnecter ?')) {
+      sessionStorage.removeItem('userConnecte');
+      document.getElementById('dashboard').style.display = 'none';
+      document.getElementById('loginScreen').style.display = 'flex';
+      document.getElementById('loginUser').value = '';
+      document.getElementById('loginPass').value = '';
+    }
   }
 
-  // Vérifier clé URL + session au chargement
+  // Vérifier session existante
   window.addEventListener('DOMContentLoaded', () => {
-    if (!verifierCleURL()) return;
-    if (tentatives >= MAX_TENTATIVES) {
-      document.getElementById('mdpAdmin').disabled = true;
-      document.querySelector('.btn-primary').disabled = true;
-    }
-    if (sessionStorage.getItem('adminConnecte')) {
-      document.getElementById('loginAdmin').style.display = 'none';
-      document.getElementById('dashAdmin').style.display = 'block';
-      chargerDonnees();
+    const u = sessionStorage.getItem('userConnecte');
+    if (u) {
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('dashboard').style.display = 'block';
+      document.getElementById('userLabel').textContent = u.charAt(0).toUpperCase() + u.slice(1);
+      initialiserDashboard();
     }
   });
 
-  // ── CHARGER DONNÉES ─────────────────────────────────
-  function chargerDonnees() {
-    const enAttente = JSON.parse(localStorage.getItem('paiementsEnAttente') || '{}');
-    const valides = JSON.parse(localStorage.getItem('paiementsValides') || '{}');
-    const rejetes = JSON.parse(localStorage.getItem('paiementsRejetes') || '{}');
-
-    // Stats
-    const nbAttente = Object.keys(enAttente).length;
-    const nbValides = Object.keys(valides).length;
-    const nbRejetes = Object.keys(rejetes).length;
-    document.getElementById('statAttente').textContent = nbAttente;
-    document.getElementById('statValides').textContent = nbValides;
-    document.getElementById('statRejetes').textContent = nbRejetes;
-    document.getElementById('statRevenu').textContent = (nbValides * 5000).toLocaleString('fr-FR');
-
-    // Table en attente
-    const tblAttente = document.getElementById('tableAttente');
-    if (nbAttente === 0) {
-      tblAttente.innerHTML = '<div class="empty-state"><div class="ico">🎉</div><p>Aucun paiement en attente</p></div>';
-    } else {
-      let html = '<table><thead><tr><th>ID Client</th><th>Téléphone</th><th>Opérateur</th><th>Date</th><th>Actions</th></tr></thead><tbody>';
-      for (const [id, data] of Object.entries(enAttente)) {
-        const opIco = data.operateur === 'wave' ? '🌊' : data.operateur === 'orange' ? '🟠' : '🟡';
-        const opNom = data.operateur === 'wave' ? 'Wave' : data.operateur === 'orange' ? 'Orange Money' : 'MTN MoMo';
-        html += `<tr>
-          <td><strong>${id}</strong></td>
-          <td>${data.telephone}</td>
-          <td><span class="op-badge">${opIco} ${opNom}</span></td>
-          <td>${data.date || '—'}</td>
-          <td>
-            <div class="actions">
-              <button class="btn-valider" onclick="validerPaiement('${id}')">✅ Valider</button>
-              <button class="btn-whatsapp" onclick="voirPreuve('${data.telephone}')">📲 Voir preuve</button>
-              <button class="btn-rejeter" onclick="rejeterPaiement('${id}')">❌ Rejeter</button>
-            </div>
-          </td>
-        </tr>`;
-      }
-      html += '</tbody></table>';
-      tblAttente.innerHTML = html;
-    }
-
-    // Table validés
-    const tblValides = document.getElementById('tableValides');
-    if (nbValides === 0) {
-      tblValides.innerHTML = '<div class="empty-state"><div class="ico">✅</div><p>Aucun compte activé pour le moment</p></div>';
-    } else {
-      let html = '<table><thead><tr><th>ID Client</th><th>Téléphone</th><th>Opérateur</th><th>Code envoyé</th><th>Date</th><th>Action</th></tr></thead><tbody>';
-      for (const [id, data] of Object.entries(valides)) {
-        const opIco = data.operateur === 'wave' ? '🌊' : data.operateur === 'orange' ? '🟠' : '🟡';
-        const opNom = data.operateur === 'wave' ? 'Wave' : data.operateur === 'orange' ? 'Orange Money' : 'MTN MoMo';
-        html += `<tr>
-          <td><strong>${id}</strong></td>
-          <td>${data.telephone}</td>
-          <td><span class="op-badge">${opIco} ${opNom}</span></td>
-          <td><span class="badge valide">${data.code}</span></td>
-          <td>${data.dateValidation || '—'}</td>
-          <td>
-            <button class="btn-whatsapp" onclick="renvoyerCode('${id}')">📲 Renvoyer</button>
-          </td>
-        </tr>`;
-      }
-      html += '</tbody></table>';
-      tblValides.innerHTML = html;
-    }
+  /* ══════════════════════════════════
+     DASHBOARD
+  ══════════════════════════════════ */
+  function initialiserDashboard() {
+    // Restaurer champs établissement
+    ['champDREN','champIEP','champEPP','champAnnee'].forEach(id => {
+      const v = localStorage.getItem(id);
+      if (v) document.getElementById(id).value = v;
+    });
+    ['champDREN','champIEP','champEPP','champAnnee'].forEach(id => {
+      document.getElementById(id).addEventListener('input', function() {
+        localStorage.setItem(id, this.value);
+      });
+    });
+    majStats();
   }
 
-  // ── VALIDER UN PAIEMENT ─────────────────────────────
-  function validerPaiement(id) {
-    const enAttente = JSON.parse(localStorage.getItem('paiementsEnAttente') || '{}');
-    const client = enAttente[id];
-    if (!client) return;
-
-    // Générer code à 6 chiffres
-    const code = Math.floor(100000 + Math.random() * 900000).toString();
-
-    // Déplacer vers validés
-    const valides = JSON.parse(localStorage.getItem('paiementsValides') || '{}');
-    valides[id] = { ...client, code, dateValidation: new Date().toLocaleString('fr-FR'), statut: 'valide' };
-    localStorage.setItem('paiementsValides', JSON.stringify(valides));
-
-    // Enregistrer le code dans codes_confirmation (localStorage pour simulation)
-    const codes = JSON.parse(localStorage.getItem('codes_confirmation') || '{}');
-    codes[client.telephone] = { code, identifiant: id, utilise: false };
-    localStorage.setItem('codes_confirmation', JSON.stringify(codes));
-
-    // Supprimer de en attente
-    delete enAttente[id];
-    localStorage.setItem('paiementsEnAttente', JSON.stringify(enAttente));
-
-    // Afficher modal avec code
-    afficherModal(id, client, code);
-    chargerDonnees();
+  /* ══════════════════════════════════
+     FORMAT ANNÉE
+  ══════════════════════════════════ */
+  function formatAnnee(input) {
+    let val = input.value.replace(/[^0-9]/g, '');
+    if (val.length > 4) val = val.slice(0,4) + '-' + val.slice(4,8);
+    input.value = val;
+    localStorage.setItem('champAnnee', val);
   }
 
-  // ── REJETER UN PAIEMENT ─────────────────────────────
-  function rejeterPaiement(id) {
-    if (!confirm('Confirmer le rejet de ce paiement ?')) return;
-    const enAttente = JSON.parse(localStorage.getItem('paiementsEnAttente') || '{}');
-    const client = enAttente[id];
+  /* ══════════════════════════════════
+     CASCADE DRENAET → IEPP
+  ══════════════════════════════════ */
+  const cascadeDREN = {
+    "DRENAET ABENGOUROU": ["IEPP ABENGOUROU", "IEPP ABENGOUROU 2", "IEPP AGNIBILEKROU"],
+    "DRENAET ABIDJAN 1": ["IEPP ABIDJAN ADJAME 1", "IEPP ABIDJAN ADJAME 2", "IEPP ABIDJAN PLATEAU", "IEPP ABIDJAN ATTIECOUBE", "IEPP ABIDJAN ATTIECOUBE 2"],
+    "DRENAET ABIDJAN 2": ["IEPP ABIDJAN ABOBO 1", "IEPP ABIDJAN ABOBO 2", "IEPP ABIDJAN ABOBO 3", "IEPP ABIDJAN ABOBO NORD", "IEPP ABIDJAN ABOBO SUD"],
+    "DRENAET ABIDJAN 3": ["IEPP ABIDJAN COCODY 1", "IEPP ABIDJAN COCODY 2", "IEPP ABIDJAN COCODY DEUX-PLATEAUX", "IEPP ABIDJAN COCODY RIVIERA", "IEPP ABIDJAN PORT-BOUET", "IEPP ABIDJAN PORT-BOUET 2"],
+    "DRENAET ABIDJAN 4": ["IEPP ABIDJAN KOUMASSI", "IEPP ABIDJAN KOUMASSI 2", "IEPP ABIDJAN MARCORY", "IEPP ABIDJAN MARCORY 2", "IEPP ABIDJAN TREICHVILLE", "IEPP ABIDJAN TREICHVILLE 2", "IEPP ABIDJAN YOPOUGON 1", "IEPP ABIDJAN YOPOUGON 2", "IEPP ABIDJAN YOPOUGON 3", "IEPP ABIDJAN YOPOUGON 4", "IEPP ABIDJAN YOPOUGON NORD", "IEPP ABIDJAN YOPOUGON SUD"],
+    "DRENAET ABOISSO": ["IEPP ABOISSO", "IEPP ABOISSO 2", "IEPP GRAND-BASSAM", "IEPP GRAND-BASSAM 2", "IEPP JACQUEVILLE", "IEPP ALEPE", "IEPP ABOVILLE"],
+    "DRENAET ADZOPE": ["IEPP ADZOPE", "IEPP ADZOPE 2", "IEPP ALAOUA"],
+    "DRENAET AGBOVILLE": ["IEPP AGBOVILLE", "IEPP AGBOVILLE 2", "IEPP GRAND-LAHOU", "IEPP IROBO", "IEPP TIASSALE", "IEPP TIASSALE 2"],
+    "DRENAET BONDOUKOU": ["IEPP BONDOUKOU", "IEPP BONDOUKOU 2", "IEPP TANDA"],
+    "DRENAET BONGOUANOU": ["IEPP BONGOUANOU", "IEPP BONGOUANOU 2", "IEPP BOCANDA", "IEPP DIMBOKRO", "IEPP DIMBOKRO 2", "IEPP DAOUKRO", "IEPP DAOUKRO 2"],
+    "DRENAET BOUAFLE": ["IEPP BOUAFLE", "IEPP BOUAFLE 2", "IEPP SINFRA", "IEPP SINFRA 2", "IEPP OUME", "IEPP OUME 2"],
+    "DRENAET BOUAKE 1": ["IEPP BOUAKE BROMAKOTÉ", "IEPP BOUAKE DAR-ES-SALAM", "IEPP BOUAKE KOKO", "IEPP BOUAKE NIMBO", "IEPP BOUAKE NORD"],
+    "DRENAET BOUAKE 2": ["IEPP BOUAKE SUD", "IEPP BOUAKE TREICHVILLE", "IEPP BEOUMI", "IEPP BEOUMI 2", "IEPP SAKASSOU", "IEPP TIEBISSOU"],
+    "DRENAET BOUNA": ["IEPP BOUNA", "IEPP BOUNA 2"],
+    "DRENAET BOUNDIALI": ["IEPP BOUNDIALI", "IEPP BOUNDIALI 2", "IEPP TENGRELA", "IEPP TINGRELA"],
+    "DRENAET DABOU": ["IEPP DABOU", "IEPP DABOU 2", "IEPP TIEGBA", "IEPP GRAND-LAHOU"],
+    "DRENAET DALOA": ["IEPP DALOA 1", "IEPP DALOA 2", "IEPP DALOA 3", "IEPP DALOA NORD", "IEPP DALOA SUD", "IEPP ISSIA", "IEPP ISSIA 2", "IEPP VAVOUA", "IEPP VAVOUA 2"],
+    "DRENAET DANANE": ["IEPP DANANE", "IEPP DANANE 2", "IEPP BIANKOUMA", "IEPP BANGOLO", "IEPP TOULEPLEU"],
+    "DRENAET DAOUKRO": ["IEPP DAOUKRO", "IEPP DAOUKRO 2"],
+    "DRENAET DIMBOKRO": ["IEPP DIMBOKRO", "IEPP DIMBOKRO 2"],
+    "DRENAET DIVO": ["IEPP DIVO", "IEPP DIVO 2", "IEPP LAKOTA", "IEPP LAKOTA 2", "IEPP GUITRY", "IEPP GUIBEROUA", "IEPP FRESCO"],
+    "DRENAET DUEKOUE": ["IEPP DUEKOUE", "IEPP DUEKOUE 2", "IEPP GUIGLO", "IEPP GUIGLO 2"],
+    "DRENAET FERKESSEDOUGOU": ["IEPP FERKESSEDOUGOU", "IEPP FERKESSEDOUGOU 2", "IEPP TAFIRE", "IEPP DABAKALA", "IEPP DABAKALA 2"],
+    "DRENAET GAGNOA": ["IEPP GAGNOA 1", "IEPP GAGNOA 2", "IEPP GAGNOA 3", "IEPP GAGNOA NORD", "IEPP GAGNOA SUD"],
+    "DRENAET GRAND-BASSAM": ["IEPP GRAND-BASSAM", "IEPP GRAND-BASSAM 2"],
+    "DRENAET GUIGLO": ["IEPP GUIGLO", "IEPP GUIGLO 2", "IEPP MEAGUI"],
+    "DRENAET ISSIA": ["IEPP ISSIA", "IEPP ISSIA 2"],
+    "DRENAET KATIOLA": ["IEPP KATIOLA", "IEPP KATIOLA 2", "IEPP SATAMA-SOKOURA"],
+    "DRENAET KORHOGO": ["IEPP KORHOGO 1", "IEPP KORHOGO 2", "IEPP KORHOGO 3", "IEPP KORHOGO NORD", "IEPP KORHOGO SUD"],
+    "DRENAET MAN": ["IEPP MAN 1", "IEPP MAN 2", "IEPP MAN 3"],
+    "DRENAET MANKONO": ["IEPP MANKONO", "IEPP MANKONO 2"],
+    "DRENAET MINIGNAN": ["IEPP MINIGNAN"],
+    "DRENAET ODIENNE": ["IEPP ODIENNE", "IEPP ODIENNE 2"],
+    "DRENAET SAN-PEDRO": ["IEPP SAN-PEDRO 1", "IEPP SAN-PEDRO 2", "IEPP SAN-PEDRO 3", "IEPP SAN-PEDRO NORD", "IEPP SAN-PEDRO SUD", "IEPP SASSANDRA", "IEPP SASSANDRA 2", "IEPP TABOU"],
+    "DRENAET SASSANDRA": ["IEPP SASSANDRA", "IEPP SASSANDRA 2"],
+    "DRENAET SEGUELA": ["IEPP SEGUELA", "IEPP SEGUELA 2"],
+    "DRENAET SINFRA": ["IEPP SINFRA", "IEPP SINFRA 2"],
+    "DRENAET SOUBRE": ["IEPP SOUBRE", "IEPP SOUBRE 2", "IEPP BUYO"],
+    "DRENAET TIASSALE": ["IEPP TIASSALE", "IEPP TIASSALE 2"],
+    "DRENAET TOUBA": ["IEPP TOUBA", "IEPP TOUBA 2"],
+    "DRENAET YAMOUSSOUKRO": ["IEPP YAMOUSSOUKRO 1", "IEPP YAMOUSSOUKRO 2", "IEPP YAMOUSSOUKRO 3", "IEPP YAMOUSSOUKRO NORD", "IEPP YAMOUSSOUKRO SUD", "IEPP ZUENOULA", "IEPP ZUENOULA 2", "IEPP TIEBISSOU", "IEPP SAKASSOU"]
+  };
 
-    const rejetes = JSON.parse(localStorage.getItem('paiementsRejetes') || '{}');
-    rejetes[id] = { ...client, dateRejet: new Date().toLocaleString('fr-FR'), statut: 'rejete' };
-    localStorage.setItem('paiementsRejetes', JSON.stringify(rejetes));
+  const listesDREN = Object.keys(cascadeDREN).sort();
 
-    delete enAttente[id];
-    localStorage.setItem('paiementsEnAttente', JSON.stringify(enAttente));
-
-    // Notifier le client sur WhatsApp
-    const msg = encodeURIComponent(
-      `❌ *GestionScolaire-CI*\n\n` +
-      `Bonjour,\n\nVotre demande d'activation (ID: ${id}) a été rejetée.\n\n` +
-      `La preuve de paiement fournie n'a pas pu être vérifiée.\n\n` +
-      `Veuillez recommencer ou contacter le support.`
-    );
-    window.open(`https://wa.me/225${client.telephone}?text=${msg}`, '_blank');
-    chargerDonnees();
+  function afficherDropdown(ul, items, onclickFn) {
+    if (items.length === 0) { ul.style.display = 'none'; return; }
+    ul.innerHTML = items.map(d =>
+      `<li onclick="${onclickFn}('${d.replace(/'/g,"\\'")}')"> ${d}</li>`
+    ).join('');
+    ul.style.display = 'block';
   }
 
-  // ── VOIR PREUVE ─────────────────────────────────────
-  function voirPreuve(telephone) {
-    const msg = encodeURIComponent(`Bonjour, pouvez-vous m'envoyer votre preuve de paiement ?`);
-    window.open(`https://wa.me/225${telephone}?text=${msg}`, '_blank');
+  function filtrerDREN(val) {
+    const ul = document.getElementById('listeDREN');
+    const f = val.trim().toUpperCase();
+    const r = f ? listesDREN.filter(d => d.includes(f)) : listesDREN;
+    afficherDropdown(ul, r, 'choisirDREN');
   }
 
-  // ── RENVOYER CODE ───────────────────────────────────
-  function renvoyerCode(id) {
-    const valides = JSON.parse(localStorage.getItem('paiementsValides') || '{}');
-    const client = valides[id];
-    if (!client) return;
-    afficherModal(id, client, client.code);
+  function choisirDREN(val) {
+    document.getElementById('champDREN').value = val;
+    document.getElementById('listeDREN').style.display = 'none';
+    localStorage.setItem('champDREN', val);
+    document.getElementById('champIEP').value = '';
+    document.getElementById('champIEP').placeholder = 'Choisir une IEPP...';
+    localStorage.removeItem('champIEP');
+    const ul = document.getElementById('listeIEP');
+    afficherDropdown(ul, cascadeDREN[val] || [], 'choisirIEP');
+    document.getElementById('champIEP').focus();
   }
 
-  // ── MODAL ───────────────────────────────────────────
-  function afficherModal(id, client, code) {
-    document.getElementById('codeAffiche').textContent = code;
+  function filtrerIEP(val) {
+    const ul = document.getElementById('listeIEP');
+    const dren = document.getElementById('champDREN').value;
+    const source = (dren && cascadeDREN[dren]) ? cascadeDREN[dren] : Object.values(cascadeDREN).flat();
+    const f = val.trim().toUpperCase();
+    const r = f ? source.filter(d => d.toUpperCase().includes(f)) : source;
+    afficherDropdown(ul, r, 'choisirIEP');
+  }
 
-    const opNom = client.operateur === 'wave' ? 'Wave' : client.operateur === 'orange' ? 'Orange Money' : 'MTN MoMo';
-    document.getElementById('clientInfoModal').innerHTML = `
-      <div class="client-info-row"><span class="key">ID Client</span><span class="val">${id}</span></div>
-      <div class="client-info-row"><span class="key">Téléphone</span><span class="val">${client.telephone}</span></div>
-      <div class="client-info-row"><span class="key">Opérateur</span><span class="val">${opNom}</span></div>
-      <div class="client-info-row"><span class="key">Montant</span><span class="val" style="color:var(--vert)">5 000 FCFA ✅</span></div>
+  function choisirIEP(val) {
+    document.getElementById('champIEP').value = val;
+    document.getElementById('listeIEP').style.display = 'none';
+    localStorage.setItem('champIEP', val);
+  }
+
+  /* ══════════════════════════════════
+     STATS & NAVIGATION
+  ══════════════════════════════════ */
+  let eleves = JSON.parse(localStorage.getItem('eleves')) || [];
+  function majStats() {
+    eleves = JSON.parse(localStorage.getItem('eleves')) || [];
+    document.getElementById('statTotal').textContent = eleves.length;
+    document.getElementById('statGarcons').textContent = eleves.filter(e => e.sexe === 'M').length;
+    document.getElementById('statFilles').textContent = eleves.filter(e => e.sexe === 'F').length;
+  }
+
+  function ouvrirClasse(page) { window.location.href = page; }
+  function ouvrirInfosEleves() { window.open('infos-eleves.html', '_blank'); }
+
+  /* ══════════════════════════════════
+     FICHE ÉLÈVE
+  ══════════════════════════════════ */
+  function afficherEleve(e) {
+    document.getElementById('ficheNomComplet').textContent = (e.nom||'')+' '+(e.prenom||'');
+    document.getElementById('ficheClasseBadge').textContent = 'Classe : '+(e.classe||'—');
+    document.getElementById('ficheSexe').textContent = e.sexe==='M'?'Masculin':e.sexe==='F'?'Féminin':'Non défini';
+    document.getElementById('ficheDate').textContent = e.dateNaissance||'Non définie';
+    document.getElementById('fichePhoto').src = e.photo||'';
+    let notes = e.notes||{};
+    document.getElementById('noteFr').textContent = notes.francais||0;
+    document.getElementById('noteMath').textContent = notes.maths||0;
+    document.getElementById('noteSci').textContent = notes.science||0;
+    let vals = Object.values(notes);
+    let moy = vals.length?(vals.reduce((a,b)=>+a+ +b)/vals.length).toFixed(2):'0.00';
+    document.getElementById('ficheMoyenne').textContent = moy;
+    document.getElementById('overlay').style.display = 'block';
+    let f = document.getElementById('ficheEleve');
+    f.style.display = 'block';
+    setTimeout(()=>f.classList.add('show'),10);
+  }
+
+  function fermerFiche() {
+    let f = document.getElementById('ficheEleve');
+    f.classList.remove('show');
+    setTimeout(()=>{ f.style.display='none'; document.getElementById('overlay').style.display='none'; },300);
+  }
+
+  /* ══════════════════════════════════
+     SYSTÈME PAIEMENT MOBILE MONEY
+  ══════════════════════════════════ */
+
+  // Numéros Mobile Money par opérateur
+  const NUMEROS_PAIEMENT = {
+    wave:   { num: "07 10 15 78 77", label: "Wave",             couleur: "#1BA8F1", logo: "🌊" },
+    orange: { num: "07 10 15 78 77", label: "Orange Money",     couleur: "#FF6600", logo: "🟠" },
+    mtn:    { num: "05 01 69 42 74", label: "MTN Mobile Money", couleur: "#FFC200", logo: "🟡" }
+  };
+
+  let operateurChoisi = null;
+  let codeAttendu = null;
+  let identifiantGenere = null;
+
+  function ouvrirPaiement() {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('paiementScreen').style.display = 'flex';
+    etapePaiement(1);
+  }
+
+  function retourLogin() {
+    document.getElementById('paiementScreen').style.display = 'none';
+    document.getElementById('loginScreen').style.display = 'flex';
+  }
+
+  function etapePaiement(n) {
+    [1,2,3,4].forEach(i => {
+      const el = document.getElementById('etape'+i);
+      if(el) el.style.display = (i===n) ? 'block' : 'none';
+    });
+    // Mettre à jour la barre de progression
+    document.querySelectorAll('.prog-step').forEach((s,i) => {
+      s.classList.toggle('active', i < n);
+      s.classList.toggle('done', i < n-1);
+    });
+  }
+
+  function choisirOperateur(op) {
+    operateurChoisi = op;
+    const info = NUMEROS_PAIEMENT[op];
+    document.querySelectorAll('.op-btn').forEach(b => b.classList.remove('selected'));
+    document.getElementById('op-'+op).classList.add('selected');
+    const zone = document.getElementById('zoneNumPaiement');
+    zone.style.display = 'block';
+    zone.innerHTML = `
+      <div class="num-paiement-box" style="border-color:${info.couleur}20;background:${info.couleur}08;">
+        <div class="num-logo" style="background:${info.couleur}18;color:${info.couleur}">${info.logo}</div>
+        <div>
+          <div class="num-label">Envoyez <strong>5 000 FCFA</strong> au :</div>
+          <div class="num-value" style="color:${info.couleur}">${info.num}</div>
+          <div class="num-ref">Référence : <strong>ECOLE-${Date.now().toString().slice(-6)}</strong></div>
+        </div>
+      </div>
+      <p class="num-instruction">📲 Après le transfert, cliquez sur <strong>"J'ai payé"</strong> pour recevoir votre code de confirmation.</p>
     `;
-
-    const msg = encodeURIComponent(
-      `✅ *GestionScolaire-CI — Compte activé !*\n\n` +
-      `Bonjour !\n\nVotre paiement de *5 000 FCFA* a été vérifié et validé.\n\n` +
-      `🔑 Votre identifiant : *${id}*\n` +
-      `🔐 Votre code d'activation : *${code}*\n\n` +
-      `Rendez-vous sur le site pour créer votre mot de passe :\n` +
-      `👉 https://ecole-gestion-ci.netlify.app\n\n` +
-      `⚠️ Ce code expire dans 24h.`
-    );
-    document.getElementById('btnEnvoyerWA').href = `https://wa.me/225${client.telephone}?text=${msg}`;
-
-    document.getElementById('modalOverlay').style.display = 'block';
-    const m = document.getElementById('modal');
-    m.style.display = 'block';
-    setTimeout(() => m.classList.add('show'), 10);
   }
 
-  function fermerModal() {
-    const m = document.getElementById('modal');
-    m.classList.remove('show');
-    setTimeout(() => {
-      m.style.display = 'none';
-      document.getElementById('modalOverlay').style.display = 'none';
-    }, 300);
+  // ── Helpers UI ─────────────────────────────────────
+  function setBtnLoading(btnId, loading, texte) {
+    const btn = document.getElementById(btnId);
+    if (!btn) return;
+    btn.disabled = loading;
+    btn.textContent = loading ? '⏳ Veuillez patienter...' : texte;
+    btn.style.opacity = loading ? '0.7' : '1';
+  }
+
+  function afficherErreur(elId, msg) {
+    const el = document.getElementById(elId);
+    if (!el) return;
+    el.style.display = 'block';
+    el.textContent = '❌ ' + msg;
+  }
+
+  function cacherErreur(elId) {
+    const el = document.getElementById(elId);
+    if (el) el.style.display = 'none';
+  }
+
+  // Numéro WhatsApp administrateur
+  const WHATSAPP_ADMIN = '2250710157877';
+
+  // ── ÉTAPE 1 : Envoyer preuve de paiement via WhatsApp ──
+  function validerPaiement() {
+    if (!operateurChoisi) {
+      afficherErreur('erreurPaiement', 'Veuillez choisir un opérateur Mobile Money.');
+      return;
+    }
+    const tel = document.getElementById('telPaiement').value.replace(/\s/g, '');
+    if (!/^[0-9]{10}$/.test(tel)) {
+      afficherErreur('erreurPaiement', 'Numéro de téléphone invalide (10 chiffres requis).');
+      return;
+    }
+    cacherErreur('erreurPaiement');
+
+    identifiantGenere = 'USER-' + Date.now().toString().slice(-5);
+    window._telPaiement = tel;
+
+    const operateurNom = NUMEROS_PAIEMENT[operateurChoisi].label;
+    const message = encodeURIComponent(
+      '🏫 *GestionScolaire-CI — Preuve de paiement*\n\n' +
+      'Bonjour, j\'ai effectué un paiement de *5 000 FCFA* via *' + operateurNom + '*.' + '\n\n' +
+      '📱 Mon numéro : *' + tel + '*\n' +
+      '🔖 Mon ID temporaire : *' + identifiantGenere + '*\n\n' +
+      'Veuillez trouver ci-joint ma capture d\'écran de confirmation.\n' +
+      'Merci de m\'envoyer mon code d\'activation.'
+    );
+
+    document.getElementById('affichageWhatsApp').innerHTML =
+      '<div class="sms-simule">' +
+        '<div class="sms-header">✅ Paiement enregistré — Étape suivante</div>' +
+        '<div class="sms-body">' +
+          '<strong>Votre ID temporaire : </strong>' +
+          '<span class="code-sms" style="font-size:18px;letter-spacing:3px;">' + identifiantGenere + '</span><br><br>' +
+          '📌 <strong>Notez bien cet ID</strong>, vous en aurez besoin après validation.<br><br>' +
+          '👇 Cliquez sur le bouton ci-dessous pour envoyer votre preuve de paiement à l\'administrateur via WhatsApp :' +
+        '</div>' +
+      '</div>' +
+      '<a href="https://wa.me/2250710157877?text=' + message + '" target="_blank" class="btn-pay" style="display:block;text-align:center;text-decoration:none;margin-top:12px;">' +
+        '📲 Envoyer ma preuve sur WhatsApp' +
+      '</a>' +
+      '<p style="font-size:11px;color:var(--texte-doux);text-align:center;margin-top:10px;">' +
+        'Après vérification, l\'administrateur vous enverra votre code d\'activation par WhatsApp.' +
+      '</p>';
+
+    etapePaiement(2);
+  }
+
+  // ── ÉTAPE 2 : Vérifier le code SMS ─────────────────
+  async function verifierCode() {
+    const saisi = document.getElementById('codeConfirmation').value.trim();
+    if (!/^[0-9]{6}$/.test(saisi)) {
+      afficherErreur('erreurCode', 'Entrez un code à 6 chiffres.');
+      return;
+    }
+    cacherErreur('erreurCode');
+    setBtnLoading('btnVerifierCode', true, 'Vérifier le code →');
+
+    try {
+      const res = await fetch('/.netlify/functions/verifier-code', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ telephone: window._telPaiement, code: saisi }),
+      });
+      const data = await res.json();
+
+      if (!res.ok || !data.succes) {
+        afficherErreur('erreurCode', data.erreur || 'Code incorrect.');
+        return;
+      }
+
+      identifiantGenere = data.identifiant;
+      document.getElementById('identifiantAffiche').textContent = identifiantGenere;
+      etapePaiement(3);
+
+    } catch (err) {
+      afficherErreur('erreurCode', 'Connexion impossible. Réessayez.');
+    } finally {
+      setBtnLoading('btnVerifierCode', false, 'Vérifier le code →');
+    }
+  }
+
+  // ── ÉTAPE 3 : Créer le mot de passe ────────────────
+  async function creerMotDePasse() {
+    const mdp1 = document.getElementById('nouveauMdp').value;
+    const mdp2 = document.getElementById('confirmerMdp').value;
+    cacherErreur('erreurMdp');
+
+    if (mdp1.length < 6) {
+      afficherErreur('erreurMdp', 'Le mot de passe doit contenir au moins 6 caractères.');
+      return;
+    }
+    if (mdp1 !== mdp2) {
+      afficherErreur('erreurMdp', 'Les deux mots de passe ne correspondent pas.');
+      return;
+    }
+    setBtnLoading('btnCreerMdp', true, '✓ Créer mon compte');
+
+    try {
+      const res = await fetch('/.netlify/functions/creer-compte', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ identifiant: identifiantGenere, motDePasse: mdp1 }),
+      });
+      const data = await res.json();
+
+      if (!res.ok || !data.succes) {
+        afficherErreur('erreurMdp', data.erreur || 'Erreur création compte.');
+        return;
+      }
+
+      document.getElementById('recapIdentifiant').textContent = identifiantGenere;
+      etapePaiement(4);
+
+    } catch (err) {
+      afficherErreur('erreurMdp', 'Connexion impossible. Réessayez.');
+    } finally {
+      setBtnLoading('btnCreerMdp', false, '✓ Créer mon compte');
+    }
+  }
+
+  function allerAConnexion() {
+    document.getElementById('paiementScreen').style.display = 'none';
+    document.getElementById('loginScreen').style.display = 'flex';
+    if (identifiantGenere) {
+      document.getElementById('loginUser').value = identifiantGenere;
+      document.getElementById('loginPass').focus();
+    }
+  }
+
+  // ── CONNEXION via Netlify Function ──────────────────
+  async function seConnecter() {
+    const user = document.getElementById('loginUser').value.trim().toLowerCase();
+    const pass = document.getElementById('loginPass').value;
+    const err  = document.getElementById('loginError');
+    const btn  = document.querySelector('.btn-login');
+
+    if (!user || !pass) {
+      err.style.display = 'block';
+      err.textContent = '⚠️ Veuillez remplir tous les champs.';
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = '⏳ Connexion...';
+    err.style.display = 'none';
+
+    try {
+      const res = await fetch('/.netlify/functions/connexion', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ identifiant: user, motDePasse: pass }),
+      });
+      const data = await res.json();
+
+      if (!res.ok || !data.succes) {
+        err.style.display = 'block';
+        err.textContent = '⚠️ ' + (data.erreur || 'Identifiant ou mot de passe incorrect.');
+        document.getElementById('loginPass').value = '';
+        document.getElementById('loginPass').focus();
+        return;
+      }
+
+      // Connexion réussie
+      sessionStorage.setItem('userConnecte', data.identifiant);
+      sessionStorage.setItem('authToken', data.token);
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('dashboard').style.display = 'block';
+      document.getElementById('userLabel').textContent =
+        data.identifiant.charAt(0).toUpperCase() + data.identifiant.slice(1);
+      initialiserDashboard();
+
+    } catch (e) {
+      err.style.display = 'block';
+      err.textContent = '⚠️ Connexion impossible. Vérifiez votre internet.';
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Se connecter →';
+    }
+  }
+</script>
+
+<!-- ═══════════════ ÉCRAN PAIEMENT ═══════════════ -->
+<div id="paiementScreen" style="display:none; min-height:100vh; background:var(--gris-bg); flex-direction:column; align-items:center; justify-content:flex-start; padding:40px 20px 60px;">
+
+  <style>
+    /* PAIEMENT STYLES */
+    .paiement-box {
+      background: white;
+      border-radius: 20px;
+      box-shadow: var(--shadow-xl);
+      width: 100%;
+      max-width: 520px;
+      overflow: hidden;
+    }
+    .paiement-header {
+      background: linear-gradient(135deg, var(--bleu) 0%, var(--bleu-mid) 100%);
+      padding: 28px 32px 24px;
+      position: relative;
+    }
+    .paiement-header .retour {
+      position: absolute;
+      top: 16px; left: 16px;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 50px;
+      color: rgba(255,255,255,0.8);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 5px 14px;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: all 0.2s;
+    }
+    .paiement-header .retour:hover { background: rgba(255,255,255,0.22); color: white; }
+    .paiement-header h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      color: white;
+      font-weight: 900;
+      margin-top: 24px;
+      margin-bottom: 4px;
+    }
+    .paiement-header p { font-size: 12px; color: rgba(255,255,255,0.55); }
+
+    /* BARRE DE PROGRESSION */
+    .prog-bar {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      margin-top: 20px;
+    }
+    .prog-step {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.15);
+      border: 2px solid rgba(255,255,255,0.25);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.5);
+      transition: all 0.3s;
+      flex-shrink: 0;
+    }
+    .prog-step.active { background: var(--orange); border-color: var(--orange); color: white; box-shadow: 0 0 0 3px rgba(232,96,10,0.3); }
+    .prog-step.done  { background: var(--vert); border-color: var(--vert); color: white; }
+    .prog-line {
+      flex: 1;
+      height: 2px;
+      background: rgba(255,255,255,0.15);
+    }
+    .prog-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 6px;
+    }
+    .prog-labels span {
+      font-size: 9px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.4);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      text-align: center;
+      flex: 1;
+    }
+
+    .paiement-body { padding: 28px 32px; }
+
+    .section-pay { margin-bottom: 22px; }
+    .section-pay label {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--texte-doux);
+      margin-bottom: 10px;
+    }
+
+    /* OPÉRATEURS */
+    .ops-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    .op-btn {
+      border: 2px solid var(--gris-bord);
+      border-radius: 12px;
+      padding: 14px 8px;
+      text-align: center;
+      cursor: pointer;
+      background: var(--gris-bg);
+      transition: all 0.2s;
+      font-family: 'Inter', sans-serif;
+    }
+    .op-btn:hover { border-color: #aaa; background: #fff; transform: translateY(-2px); }
+    .op-btn.selected { border-color: var(--orange); background: #FFF5EE; box-shadow: 0 0 0 3px rgba(232,96,10,0.12); }
+    .op-btn .op-logo { font-size: 26px; display: block; margin-bottom: 6px; }
+    .op-btn .op-name { font-size: 10px; font-weight: 700; color: var(--texte); display: block; }
+    .op-btn .op-sub  { font-size: 9px; color: var(--texte-doux); }
+
+    /* ZONE NUMÉRO */
+    #zoneNumPaiement { display: none; margin-top: 14px; }
+    .num-paiement-box {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      border: 1.5px solid;
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 10px;
+    }
+    .num-logo {
+      width: 44px; height: 44px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+    .num-label { font-size: 12px; color: var(--texte-doux); margin-bottom: 2px; }
+    .num-value { font-size: 20px; font-weight: 800; letter-spacing: 1px; }
+    .num-ref   { font-size: 11px; color: var(--texte-doux); margin-top: 2px; }
+    .num-instruction {
+      font-size: 12px;
+      color: var(--texte-doux);
+      background: var(--gris-bg);
+      border-radius: 8px;
+      padding: 10px 14px;
+      line-height: 1.5;
+    }
+
+    /* INPUT TÉLÉPHONE */
+    .pay-input {
+      width: 100%;
+      padding: 13px 16px;
+      border: 1.5px solid var(--gris-bord);
+      border-radius: 12px;
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--texte);
+      background: var(--gris-bg);
+      outline: none;
+      transition: all 0.2s;
+      letter-spacing: 1px;
+    }
+    .pay-input:focus { border-color: var(--orange); background: #fff; box-shadow: 0 0 0 3px rgba(232,96,10,0.12); }
+    .pay-input::placeholder { color: #A0AEC0; font-weight: 400; letter-spacing: 0; }
+
+    /* SMS SIMULÉ */
+    .sms-simule {
+      background: #F0F4FF;
+      border: 1px solid #CBD5E0;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+    .sms-header {
+      background: #4A5568;
+      color: white;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 8px 14px;
+    }
+    .sms-body {
+      padding: 14px 16px;
+      font-size: 13px;
+      color: var(--texte);
+      line-height: 1.6;
+    }
+    .code-sms {
+      font-size: 28px;
+      font-weight: 900;
+      color: var(--orange);
+      letter-spacing: 6px;
+      font-family: 'Playfair Display', serif;
+      display: inline-block;
+      margin: 4px 0;
+    }
+
+    /* IDENTIFIANT AFFICHÉ */
+    .identifiant-card {
+      background: linear-gradient(135deg, var(--bleu), var(--bleu-mid));
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+    .identifiant-card .id-label { font-size: 11px; color: rgba(255,255,255,0.55); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
+    .identifiant-card .id-value { font-size: 22px; font-weight: 900; color: white; font-family: 'Playfair Display', serif; letter-spacing: 2px; }
+
+    /* ERREURS */
+    .err-msg {
+      display: none;
+      background: #FFF5F5;
+      border: 1px solid #FEB2B2;
+      border-radius: 8px;
+      padding: 9px 14px;
+      font-size: 12px;
+      color: #C53030;
+      font-weight: 500;
+      margin-bottom: 12px;
+    }
+
+    /* SUCCÈS */
+    .succes-box {
+      text-align: center;
+      padding: 12px 0;
+    }
+    .succes-ico {
+      width: 72px; height: 72px;
+      background: linear-gradient(135deg, var(--vert), var(--vert-light));
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 34px;
+      margin: 0 auto 18px;
+      box-shadow: 0 8px 24px rgba(0,132,61,0.3);
+    }
+    .succes-titre {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      font-weight: 900;
+      color: var(--bleu);
+      margin-bottom: 6px;
+    }
+    .succes-sous { font-size: 13px; color: var(--texte-doux); margin-bottom: 20px; line-height: 1.5; }
+    .recap-card {
+      background: var(--gris-bg);
+      border: 1px solid var(--gris-bord);
+      border-radius: 12px;
+      padding: 14px 18px;
+      text-align: left;
+      margin-bottom: 20px;
+    }
+    .recap-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 0;
+      font-size: 13px;
+      border-bottom: 1px solid var(--gris-bord);
+    }
+    .recap-row:last-child { border-bottom: none; }
+    .recap-row .key { color: var(--texte-doux); font-weight: 500; }
+    .recap-row .val { font-weight: 700; color: var(--bleu); }
+
+    /* BOUTONS PAIEMENT */
+    .btn-pay {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, var(--orange), var(--orange-light));
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(232,96,10,0.3);
+      transition: all 0.25s;
+      letter-spacing: 0.3px;
+    }
+    .btn-pay:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(232,96,10,0.4); }
+    .btn-pay.vert {
+      background: linear-gradient(135deg, var(--vert), var(--vert-light));
+      box-shadow: 0 4px 16px rgba(0,132,61,0.3);
+    }
+    .btn-pay.vert:hover { box-shadow: 0 8px 24px rgba(0,132,61,0.4); }
+
+    .mdp-toggle {
+      position: relative;
+    }
+    .mdp-toggle input { padding-right: 44px; }
+    .mdp-toggle .eye {
+      position: absolute;
+      right: 14px; top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      font-size: 16px;
+      color: var(--texte-doux);
+      user-select: none;
+    }
+
+    .lien-paiement {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 12px;
+      color: var(--texte-doux);
+    }
+    .lien-paiement a {
+      color: var(--orange);
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .lien-paiement a:hover { text-decoration: underline; }
+
+    @media (max-width: 560px) {
+      .paiement-body { padding: 20px 18px; }
+      .paiement-header { padding: 20px 18px 18px; }
+      .ops-grid { grid-template-columns: repeat(3,1fr); gap: 8px; }
+    }
+  </style>
+
+  <!-- LOGO EN HAUT -->
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:28px;">
+    <div style="display:flex;width:32px;height:6px;border-radius:3px;overflow:hidden;">
+      <div style="background:var(--orange);flex:1"></div>
+      <div style="background:#fff;flex:1;border-top:1px solid #ddd;border-bottom:1px solid #ddd"></div>
+      <div style="background:var(--vert);flex:1"></div>
+    </div>
+    <span style="font-size:14px;font-weight:800;color:var(--bleu);">Gestion<span style="color:var(--orange)">Scolaire</span></span>
+  </div>
+
+  <div class="paiement-box">
+
+    <!-- EN-TÊTE -->
+    <div class="paiement-header">
+      <button class="retour" onclick="retourLogin()">← Retour</button>
+      <h2>Créer un compte</h2>
+      <p>Accès annuel à la plateforme · 5 000 FCFA</p>
+      <div class="prog-bar">
+        <div class="prog-step active" id="ps1">1</div>
+        <div class="prog-line"></div>
+        <div class="prog-step" id="ps2">2</div>
+        <div class="prog-line"></div>
+        <div class="prog-step" id="ps3">3</div>
+        <div class="prog-line"></div>
+        <div class="prog-step" id="ps4">✓</div>
+      </div>
+      <div class="prog-labels">
+        <span>Paiement</span>
+        <span>Code SMS</span>
+        <span>Mot de passe</span>
+        <span>Terminé</span>
+      </div>
+    </div>
+
+    <div class="paiement-body">
+
+      <!-- ÉTAPE 1 : PAIEMENT -->
+      <div id="etape1">
+        <div class="section-pay">
+          <label>Choisissez votre opérateur</label>
+          <div class="ops-grid">
+            <div class="op-btn" id="op-wave" onclick="choisirOperateur('wave')">
+              <span class="op-logo">🌊</span>
+              <span class="op-name">Wave</span>
+            </div>
+            <div class="op-btn" id="op-orange" onclick="choisirOperateur('orange')">
+              <span class="op-logo">🟠</span>
+              <span class="op-name">Orange Money</span>
+            </div>
+            <div class="op-btn" id="op-mtn" onclick="choisirOperateur('mtn')">
+              <span class="op-logo">🟡</span>
+              <span class="op-name">MTN MoMo</span>
+            </div>
+          </div>
+          <div id="zoneNumPaiement"></div>
+        </div>
+        <div class="section-pay">
+          <label>Votre numéro de téléphone</label>
+          <input class="pay-input" id="telPaiement" type="tel" placeholder="07 00 00 00 00"
+            maxlength="10" inputmode="numeric"
+            oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0,10)">
+        </div>
+        <div class="err-msg" id="erreurPaiement"></div><button id="btnValiderPaiement" class="btn-pay" onclick="validerPaiement()">J'ai effectué le paiement →</button>
+        <div class="lien-paiement">Déjà un compte ? <a onclick="retourLogin()">Se connecter</a></div>
+      </div>
+
+      <!-- ÉTAPE 2 : CODE SMS -->
+      <div id="etape2" style="display:none;">
+        <div id="affichageWhatsApp"></div>
+        <div class="section-pay">
+          <label>Entrez votre code de confirmation</label>
+          <input class="pay-input" id="codeConfirmation" type="text" placeholder="_ _ _ _ _ _"
+            maxlength="6" inputmode="numeric" style="text-align:center;letter-spacing:8px;font-size:22px;"
+            oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0,6)">
+        </div>
+        <div class="err-msg" id="erreurCode"></div>
+        <button id="btnVerifierCode" class="btn-pay" onclick="verifierCode()">Vérifier le code →</button>
+      </div>
+
+      <!-- ÉTAPE 3 : CRÉER MOT DE PASSE -->
+      <div id="etape3" style="display:none;">
+        <div class="identifiant-card">
+          <div class="id-label">🎉 Votre identifiant</div>
+          <div class="id-value" id="identifiantAffiche">—</div>
+        </div>
+        <p style="font-size:12px;color:var(--texte-doux);margin-bottom:18px;line-height:1.5;">
+          Notez bien cet identifiant, il vous servira à vous connecter. Créez maintenant votre mot de passe personnel.
+        </p>
+        <div class="section-pay">
+          <label>Nouveau mot de passe</label>
+          <div class="mdp-toggle">
+            <input class="pay-input" id="nouveauMdp" type="password" placeholder="Minimum 6 caractères">
+            <span class="eye" onclick="toggleMdp('nouveauMdp',this)">👁</span>
+          </div>
+        </div>
+        <div class="section-pay">
+          <label>Confirmer le mot de passe</label>
+          <div class="mdp-toggle">
+            <input class="pay-input" id="confirmerMdp" type="password" placeholder="Répétez le mot de passe"
+              onkeydown="if(event.key==='Enter')creerMotDePasse()">
+            <span class="eye" onclick="toggleMdp('confirmerMdp',this)">👁</span>
+          </div>
+        </div>
+        <div class="err-msg" id="erreurMdp"></div>
+        <button id="btnCreerMdp" class="btn-pay vert" onclick="creerMotDePasse()">✓ Créer mon compte</button>
+      </div>
+
+      <!-- ÉTAPE 4 : SUCCÈS -->
+      <div id="etape4" style="display:none;">
+        <div class="succes-box">
+          <div class="succes-ico">✓</div>
+          <div class="succes-titre">Compte créé !</div>
+          <div class="succes-sous">Votre compte a été créé avec succès. Voici vos informations de connexion :</div>
+          <div class="recap-card">
+            <div class="recap-row">
+              <span class="key">Identifiant</span>
+              <span class="val" id="recapIdentifiant">—</span>
+            </div>
+            <div class="recap-row">
+              <span class="key">Mot de passe</span>
+              <span class="val">••••••••</span>
+            </div>
+            <div class="recap-row">
+              <span class="key">Accès</span>
+              <span class="val" style="color:var(--vert)">✓ Activé</span>
+            </div>
+          </div>
+          <p style="font-size:11px;color:var(--texte-doux);margin-bottom:20px;">⚠️ Conservez précieusement votre identifiant. Il ne peut pas être récupéré en cas de perte.</p>
+          <button class="btn-pay vert" onclick="allerAConnexion()">→ Aller à la connexion</button>
+        </div>
+      </div>
+
+    </div><!-- /paiement-body -->
+  </div><!-- /paiement-box -->
+</div><!-- /paiementScreen -->
+
+<script>
+  // Mettre à jour les étapes de progression visuellement
+  const _etapePaiementOriginal = etapePaiement;
+  function etapePaiement(n) {
+    [1,2,3,4].forEach(i => {
+      const el = document.getElementById('etape'+i);
+      if(el) el.style.display = (i===n)?'block':'none';
+      const ps = document.getElementById('ps'+i);
+      if(ps) {
+        ps.classList.toggle('active', i === n);
+        ps.classList.toggle('done', i < n);
+        if(i < n) { ps.classList.add('active'); }
+      }
+    });
+  }
+
+  function toggleMdp(id, eye) {
+    const inp = document.getElementById(id);
+    if(inp.type === 'password') { inp.type = 'text'; eye.textContent = '🙈'; }
+    else { inp.type = 'password'; eye.textContent = '👁'; }
   }
 </script>
 </body>
