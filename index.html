@@ -1364,8 +1364,11 @@
     if (el) el.style.display = 'none';
   }
 
-  // ── ÉTAPE 1 : Envoyer SMS via Netlify Function ──────
-  async function validerPaiement() {
+  // Numéro WhatsApp administrateur
+  const WHATSAPP_ADMIN = '2250710157877';
+
+  // ── ÉTAPE 1 : Envoyer preuve de paiement via WhatsApp ──
+  function validerPaiement() {
     if (!operateurChoisi) {
       afficherErreur('erreurPaiement', 'Veuillez choisir un opérateur Mobile Money.');
       return;
@@ -1376,40 +1379,38 @@
       return;
     }
     cacherErreur('erreurPaiement');
-    setBtnLoading('btnValiderPaiement', true, "J'ai effectué le paiement →");
 
-    try {
-      const res = await fetch('/.netlify/functions/envoyer-sms', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ telephone: tel, operateur: operateurChoisi }),
-      });
-      const data = await res.json();
+    identifiantGenere = 'USER-' + Date.now().toString().slice(-5);
+    window._telPaiement = tel;
 
-      if (!res.ok || !data.succes) {
-        afficherErreur('erreurPaiement', data.erreur || 'Erreur envoi SMS. Réessayez.');
-        return;
-      }
+    const operateurNom = NUMEROS_PAIEMENT[operateurChoisi].label;
+    const message = encodeURIComponent(
+      '🏫 *GestionScolaire-CI — Preuve de paiement*\n\n' +
+      'Bonjour, j\'ai effectué un paiement de *5 000 FCFA* via *' + operateurNom + '*.' + '\n\n' +
+      '📱 Mon numéro : *' + tel + '*\n' +
+      '🔖 Mon ID temporaire : *' + identifiantGenere + '*\n\n' +
+      'Veuillez trouver ci-joint ma capture d\'écran de confirmation.\n' +
+      'Merci de m\'envoyer mon code d\'activation.'
+    );
 
-      // Stocker le téléphone pour les étapes suivantes
-      window._telPaiement = tel;
+    document.getElementById('affichageWhatsApp').innerHTML =
+      '<div class="sms-simule">' +
+        '<div class="sms-header">✅ Paiement enregistré — Étape suivante</div>' +
+        '<div class="sms-body">' +
+          '<strong>Votre ID temporaire : </strong>' +
+          '<span class="code-sms" style="font-size:18px;letter-spacing:3px;">' + identifiantGenere + '</span><br><br>' +
+          '📌 <strong>Notez bien cet ID</strong>, vous en aurez besoin après validation.<br><br>' +
+          '👇 Cliquez sur le bouton ci-dessous pour envoyer votre preuve de paiement à l\'administrateur via WhatsApp :' +
+        '</div>' +
+      '</div>' +
+      '<a href="https://wa.me/2250710157877?text=' + message + '" target="_blank" class="btn-pay" style="display:block;text-align:center;text-decoration:none;margin-top:12px;">' +
+        '📲 Envoyer ma preuve sur WhatsApp' +
+      '</a>' +
+      '<p style="font-size:11px;color:var(--texte-doux);text-align:center;margin-top:10px;">' +
+        'Après vérification, l\'administrateur vous enverra votre code d\'activation par WhatsApp.' +
+      '</p>';
 
-      // Mode sandbox Africa's Talking → afficher le code reçu
-      document.getElementById('affichageCode').innerHTML = `
-        <div class="sms-simule">
-          <div class="sms-header">📱 SMS envoyé au +225 ${tel.replace(/(\d{2})(?=\d)/g,'$1 ')}</div>
-          <div class="sms-body">
-            Un SMS de confirmation a été envoyé à votre numéro.<br><br>
-            ${data._debug_code ? `<strong>Mode test — Code : </strong><span class="code-sms">${data._debug_code}</span><br><small>(Ce code ne s'affiche qu'en mode sandbox)</small>` : '📩 Vérifiez vos SMS et entrez le code reçu.'}
-          </div>
-        </div>`;
-      etapePaiement(2);
-
-    } catch (err) {
-      afficherErreur('erreurPaiement', 'Connexion impossible. Vérifiez votre internet.');
-    } finally {
-      setBtnLoading('btnValiderPaiement', false, "J'ai effectué le paiement →");
-    }
+    etapePaiement(2);
   }
 
   // ── ÉTAPE 2 : Vérifier le code SMS ─────────────────
@@ -1936,7 +1937,7 @@
 
       <!-- ÉTAPE 2 : CODE SMS -->
       <div id="etape2" style="display:none;">
-        <div id="affichageCode"></div>
+        <div id="affichageWhatsApp"></div>
         <div class="section-pay">
           <label>Entrez votre code de confirmation</label>
           <input class="pay-input" id="codeConfirmation" type="text" placeholder="_ _ _ _ _ _"
