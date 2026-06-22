@@ -1368,7 +1368,7 @@
   const WHATSAPP_ADMIN = '2250710157877';
 
   // ── ÉTAPE 1 : Envoyer preuve de paiement via WhatsApp ──
-  function validerPaiement() {
+  async function validerPaiement() {
     if (!operateurChoisi) {
       afficherErreur('erreurPaiement', 'Veuillez choisir un opérateur Mobile Money.');
       return;
@@ -1382,6 +1382,15 @@
 
     identifiantGenere = 'USER-' + Date.now().toString().slice(-5);
     window._telPaiement = tel;
+
+    // Enregistrer dans Supabase via Netlify
+    try {
+      await fetch('/.netlify/functions/enregistrer-paiement', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ telephone: tel, operateur: operateurChoisi, identifiant: identifiantGenere }),
+      });
+    } catch(e) { console.log('Erreur enregistrement:', e); }
 
     const operateurNom = NUMEROS_PAIEMENT[operateurChoisi].label;
     const message = encodeURIComponent(
