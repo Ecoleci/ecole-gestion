@@ -308,21 +308,66 @@
 </div>
 
 <script>
-  // ── MOT DE PASSE ADMIN ──────────────────────────────
+  // ── SÉCURITÉ DOUBLE : CLÉ URL + MOT DE PASSE ────────
+  // Accès uniquement via : /admin.html?cle=GadeEcoleCI2025
+  const CLE_URL_REQUISE = 'GadeEcoleCI2025';
   const MDP_ADMIN = 'Admin@EcoleCI2025!';
+  const MAX_TENTATIVES = 3;
+  let tentatives = parseInt(sessionStorage.getItem('tentatives') || '0');
+
+  function verifierCleURL() {
+    const params = new URLSearchParams(window.location.search);
+    const cle = params.get('cle');
+    if (cle !== CLE_URL_REQUISE) {
+      // Rediriger vers page d'erreur 404 simulée
+      document.body.innerHTML = `
+        <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:#f4f6fa;font-family:Inter,sans-serif;">
+          <div style="text-align:center;color:#5A6A82;">
+            <div style="font-size:72px;margin-bottom:16px;">404</div>
+            <div style="font-size:18px;font-weight:700;color:#1A2B4A;margin-bottom:8px;">Page introuvable</div>
+            <div style="font-size:13px;">La page que vous cherchez n'existe pas.</div>
+            <a href="/" style="display:inline-block;margin-top:20px;color:#E8600A;font-weight:600;text-decoration:none;">← Retour à l'accueil</a>
+          </div>
+        </div>`;
+      return false;
+    }
+    return true;
+  }
 
   function loginAdmin() {
     const mdp = document.getElementById('mdpAdmin').value;
     const err = document.getElementById('errLogin');
+
+    // Bloquer après 3 tentatives
+    if (tentatives >= MAX_TENTATIVES) {
+      err.style.display = 'block';
+      err.textContent = '🔒 Accès bloqué. Fermez et réouvrez la page.';
+      document.getElementById('mdpAdmin').disabled = true;
+      document.querySelector('.btn-primary').disabled = true;
+      return;
+    }
+
     if (mdp === MDP_ADMIN) {
       err.style.display = 'none';
+      tentatives = 0;
+      sessionStorage.setItem('tentatives', '0');
       sessionStorage.setItem('adminConnecte', '1');
       document.getElementById('loginAdmin').style.display = 'none';
       document.getElementById('dashAdmin').style.display = 'block';
       chargerDonnees();
     } else {
+      tentatives++;
+      sessionStorage.setItem('tentatives', tentatives.toString());
+      const restantes = MAX_TENTATIVES - tentatives;
       err.style.display = 'block';
+      err.textContent = restantes > 0
+        ? '⚠️ Mot de passe incorrect. ' + restantes + ' tentative(s) restante(s).'
+        : '🔒 Accès bloqué. Trop de tentatives.';
       document.getElementById('mdpAdmin').value = '';
+      if (tentatives >= MAX_TENTATIVES) {
+        document.getElementById('mdpAdmin').disabled = true;
+        document.querySelector('.btn-primary').disabled = true;
+      }
     }
   }
 
@@ -332,8 +377,13 @@
     document.getElementById('loginAdmin').style.display = 'flex';
   }
 
-  // Vérifier session
+  // Vérifier clé URL + session au chargement
   window.addEventListener('DOMContentLoaded', () => {
+    if (!verifierCleURL()) return;
+    if (tentatives >= MAX_TENTATIVES) {
+      document.getElementById('mdpAdmin').disabled = true;
+      document.querySelector('.btn-primary').disabled = true;
+    }
     if (sessionStorage.getItem('adminConnecte')) {
       document.getElementById('loginAdmin').style.display = 'none';
       document.getElementById('dashAdmin').style.display = 'block';
@@ -341,161 +391,156 @@
     }
   });
 
-  // ── CHARGER DONNÉES ─────────────────────────────────
-  function chargerDonnees() {
-    const enAttente = JSON.parse(localStorage.getItem('paiementsEnAttente') || '{}');
-    const valides = JSON.parse(localStorage.getItem('paiementsValides') || '{}');
-    const rejetes = JSON.parse(localStorage.getItem('paiementsRejetes') || '{}');
+  // Clé admin pour les appels API
+  const ADMIN_SECRET_KEY = 'EcoleCI@Cote2025!Secretxyz';
 
-    // Stats
-    const nbAttente = Object.keys(enAttente).length;
-    const nbValides = Object.keys(valides).length;
-    const nbRejetes = Object.keys(rejetes).length;
-    document.getElementById('statAttente').textContent = nbAttente;
-    document.getElementById('statValides').textContent = nbValides;
-    document.getElementById('statRejetes').textContent = nbRejetes;
-    document.getElementById('statRevenu').textContent = (nbValides * 5000).toLocaleString('fr-FR');
+  // ── CHARGER DONNÉES DEPUIS SUPABASE ──────────────────
+  async function chargerDonnees() {
+    document.getElementById('tableAttente').innerHTML = '<div class="empty-state"><div class="ico">⏳</div><p>Chargement...</p></div>';
+    document.getElementById('tableValides').innerHTML = '<div class="empty-state"><div class="ico">⏳</div><p>Chargement...</p></div>';
 
-    // Table en attente
-    const tblAttente = document.getElementById('tableAttente');
-    if (nbAttente === 0) {
-      tblAttente.innerHTML = '<div class="empty-state"><div class="ico">🎉</div><p>Aucun paiement en attente</p></div>';
-    } else {
-      let html = '<table><thead><tr><th>ID Client</th><th>Téléphone</th><th>Opérateur</th><th>Date</th><th>Actions</th></tr></thead><tbody>';
-      for (const [id, data] of Object.entries(enAttente)) {
-        const opIco = data.operateur === 'wave' ? '🌊' : data.operateur === 'orange' ? '🟠' : '🟡';
-        const opNom = data.operateur === 'wave' ? 'Wave' : data.operateur === 'orange' ? 'Orange Money' : 'MTN MoMo';
-        html += `<tr>
-          <td><strong>${id}</strong></td>
-          <td>${data.telephone}</td>
-          <td><span class="op-badge">${opIco} ${opNom}</span></td>
-          <td>${data.date || '—'}</td>
-          <td>
-            <div class="actions">
-              <button class="btn-valider" onclick="validerPaiement('${id}')">✅ Valider</button>
-              <button class="btn-whatsapp" onclick="voirPreuve('${data.telephone}')">📲 Voir preuve</button>
-              <button class="btn-rejeter" onclick="rejeterPaiement('${id}')">❌ Rejeter</button>
-            </div>
-          </td>
-        </tr>`;
+    try {
+      const res = await fetch('/.netlify/functions/lire-paiements', {
+        headers: { 'X-Admin-Key': ADMIN_SECRET_KEY }
+      });
+      const data = await res.json();
+      if (!data.succes) { alert('Erreur chargement : ' + data.erreur); return; }
+
+      const paiements = data.paiements || [];
+      const enAttente = paiements.filter(p => p.statut === 'en_attente');
+      const valides   = paiements.filter(p => p.statut === 'valide');
+      const rejetes   = paiements.filter(p => p.statut === 'rejete');
+
+      // Stats
+      document.getElementById('statAttente').textContent = enAttente.length;
+      document.getElementById('statValides').textContent = valides.length;
+      document.getElementById('statRejetes').textContent = rejetes.length;
+      document.getElementById('statRevenu').textContent = (valides.length * 5000).toLocaleString('fr-FR');
+
+      // Table en attente
+      const tblAttente = document.getElementById('tableAttente');
+      if (enAttente.length === 0) {
+        tblAttente.innerHTML = '<div class="empty-state"><div class="ico">🎉</div><p>Aucun paiement en attente</p></div>';
+      } else {
+        let html = '<table><thead><tr><th>ID Client</th><th>Téléphone</th><th>Opérateur</th><th>Date</th><th>Actions</th></tr></thead><tbody>';
+        enAttente.forEach(p => {
+          const opIco = p.operateur === 'wave' ? '🌊' : p.operateur === 'orange' ? '🟠' : '🟡';
+          const opNom = p.operateur === 'wave' ? 'Wave' : p.operateur === 'orange' ? 'Orange Money' : 'MTN MoMo';
+          const date  = new Date(p.created_at).toLocaleString('fr-FR');
+          html += `<tr>
+            <td><strong>${p.identifiant}</strong></td>
+            <td>${p.telephone}</td>
+            <td><span class="op-badge">${opIco} ${opNom}</span></td>
+            <td>${date}</td>
+            <td>
+              <div class="actions">
+                <button class="btn-valider" onclick="validerPaiement('${p.identifiant}','${p.telephone}','${p.operateur}')">✅ Valider</button>
+                <button class="btn-whatsapp" onclick="voirPreuve('${p.telephone}')">📲 Voir preuve</button>
+                <button class="btn-rejeter" onclick="rejeterPaiement('${p.identifiant}','${p.telephone}')">❌ Rejeter</button>
+              </div>
+            </td>
+          </tr>`;
+        });
+        html += '</tbody></table>';
+        tblAttente.innerHTML = html;
       }
-      html += '</tbody></table>';
-      tblAttente.innerHTML = html;
-    }
 
-    // Table validés
-    const tblValides = document.getElementById('tableValides');
-    if (nbValides === 0) {
-      tblValides.innerHTML = '<div class="empty-state"><div class="ico">✅</div><p>Aucun compte activé pour le moment</p></div>';
-    } else {
-      let html = '<table><thead><tr><th>ID Client</th><th>Téléphone</th><th>Opérateur</th><th>Code envoyé</th><th>Date</th><th>Action</th></tr></thead><tbody>';
-      for (const [id, data] of Object.entries(valides)) {
-        const opIco = data.operateur === 'wave' ? '🌊' : data.operateur === 'orange' ? '🟠' : '🟡';
-        const opNom = data.operateur === 'wave' ? 'Wave' : data.operateur === 'orange' ? 'Orange Money' : 'MTN MoMo';
-        html += `<tr>
-          <td><strong>${id}</strong></td>
-          <td>${data.telephone}</td>
-          <td><span class="op-badge">${opIco} ${opNom}</span></td>
-          <td><span class="badge valide">${data.code}</span></td>
-          <td>${data.dateValidation || '—'}</td>
-          <td>
-            <button class="btn-whatsapp" onclick="renvoyerCode('${id}')">📲 Renvoyer</button>
-          </td>
-        </tr>`;
+      // Table validés
+      const tblValides = document.getElementById('tableValides');
+      if (valides.length === 0) {
+        tblValides.innerHTML = '<div class="empty-state"><div class="ico">✅</div><p>Aucun compte activé pour le moment</p></div>';
+      } else {
+        let html = '<table><thead><tr><th>ID Client</th><th>Téléphone</th><th>Opérateur</th><th>Code</th><th>Date validation</th><th>Action</th></tr></thead><tbody>';
+        valides.forEach(p => {
+          const opIco = p.operateur === 'wave' ? '🌊' : p.operateur === 'orange' ? '🟠' : '🟡';
+          const opNom = p.operateur === 'wave' ? 'Wave' : p.operateur === 'orange' ? 'Orange Money' : 'MTN MoMo';
+          const date  = p.date_validation ? new Date(p.date_validation).toLocaleString('fr-FR') : '—';
+          html += `<tr>
+            <td><strong>${p.identifiant}</strong></td>
+            <td>${p.telephone}</td>
+            <td><span class="op-badge">${opIco} ${opNom}</span></td>
+            <td><span class="badge valide">${p.code_activation || '—'}</span></td>
+            <td>${date}</td>
+            <td><button class="btn-whatsapp" onclick="afficherModal('${p.identifiant}','${p.telephone}','${p.operateur}','${p.code_activation}')">📲 Renvoyer</button></td>
+          </tr>`;
+        });
+        html += '</tbody></table>';
+        tblValides.innerHTML = html;
       }
-      html += '</tbody></table>';
-      tblValides.innerHTML = html;
+
+    } catch(err) {
+      console.error('Erreur:', err);
+      document.getElementById('tableAttente').innerHTML = '<div class="empty-state"><div class="ico">❌</div><p>Erreur de connexion. Réactualisez.</p></div>';
     }
   }
 
   // ── VALIDER UN PAIEMENT ─────────────────────────────
-  function validerPaiement(id) {
-    const enAttente = JSON.parse(localStorage.getItem('paiementsEnAttente') || '{}');
-    const client = enAttente[id];
-    if (!client) return;
-
-    // Générer code à 6 chiffres
-    const code = Math.floor(100000 + Math.random() * 900000).toString();
-
-    // Déplacer vers validés
-    const valides = JSON.parse(localStorage.getItem('paiementsValides') || '{}');
-    valides[id] = { ...client, code, dateValidation: new Date().toLocaleString('fr-FR'), statut: 'valide' };
-    localStorage.setItem('paiementsValides', JSON.stringify(valides));
-
-    // Enregistrer le code dans codes_confirmation (localStorage pour simulation)
-    const codes = JSON.parse(localStorage.getItem('codes_confirmation') || '{}');
-    codes[client.telephone] = { code, identifiant: id, utilise: false };
-    localStorage.setItem('codes_confirmation', JSON.stringify(codes));
-
-    // Supprimer de en attente
-    delete enAttente[id];
-    localStorage.setItem('paiementsEnAttente', JSON.stringify(enAttente));
-
-    // Afficher modal avec code
-    afficherModal(id, client, code);
-    chargerDonnees();
+  async function validerPaiement(id, telephone, operateur) {
+    try {
+      const res = await fetch('/.netlify/functions/traiter-paiement', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Admin-Key': ADMIN_SECRET_KEY },
+        body: JSON.stringify({ identifiant: id, action: 'valider' }),
+      });
+      const data = await res.json();
+      if (!data.succes) { alert('Erreur : ' + data.erreur); return; }
+      afficherModal(id, telephone, operateur, data.code);
+      chargerDonnees();
+    } catch(err) {
+      alert('Erreur de connexion. Réessayez.');
+    }
   }
 
   // ── REJETER UN PAIEMENT ─────────────────────────────
-  function rejeterPaiement(id) {
+  async function rejeterPaiement(id, telephone) {
     if (!confirm('Confirmer le rejet de ce paiement ?')) return;
-    const enAttente = JSON.parse(localStorage.getItem('paiementsEnAttente') || '{}');
-    const client = enAttente[id];
-
-    const rejetes = JSON.parse(localStorage.getItem('paiementsRejetes') || '{}');
-    rejetes[id] = { ...client, dateRejet: new Date().toLocaleString('fr-FR'), statut: 'rejete' };
-    localStorage.setItem('paiementsRejetes', JSON.stringify(rejetes));
-
-    delete enAttente[id];
-    localStorage.setItem('paiementsEnAttente', JSON.stringify(enAttente));
-
-    // Notifier le client sur WhatsApp
-    const msg = encodeURIComponent(
-      `❌ *GestionScolaire-CI*\n\n` +
-      `Bonjour,\n\nVotre demande d'activation (ID: ${id}) a été rejetée.\n\n` +
-      `La preuve de paiement fournie n'a pas pu être vérifiée.\n\n` +
-      `Veuillez recommencer ou contacter le support.`
-    );
-    window.open(`https://wa.me/225${client.telephone}?text=${msg}`, '_blank');
-    chargerDonnees();
+    try {
+      const res = await fetch('/.netlify/functions/traiter-paiement', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Admin-Key': ADMIN_SECRET_KEY },
+        body: JSON.stringify({ identifiant: id, action: 'rejeter' }),
+      });
+      const data = await res.json();
+      if (!data.succes) { alert('Erreur : ' + data.erreur); return; }
+      const msg = encodeURIComponent(
+        '❌ *GestionScolaire-CI*\n\n' +
+        'Bonjour,\n\nVotre demande (ID: ' + id + ') a été rejetée.\n\n' +
+        'La preuve de paiement fournie n\'a pas pu être vérifiée.\n\n' +
+        'Veuillez recommencer ou contacter le support.'
+      );
+      window.open('https://wa.me/225' + telephone + '?text=' + msg, '_blank');
+      chargerDonnees();
+    } catch(err) {
+      alert('Erreur de connexion. Réessayez.');
+    }
   }
 
   // ── VOIR PREUVE ─────────────────────────────────────
   function voirPreuve(telephone) {
-    const msg = encodeURIComponent(`Bonjour, pouvez-vous m'envoyer votre preuve de paiement ?`);
-    window.open(`https://wa.me/225${telephone}?text=${msg}`, '_blank');
-  }
-
-  // ── RENVOYER CODE ───────────────────────────────────
-  function renvoyerCode(id) {
-    const valides = JSON.parse(localStorage.getItem('paiementsValides') || '{}');
-    const client = valides[id];
-    if (!client) return;
-    afficherModal(id, client, client.code);
+    const msg = encodeURIComponent('Bonjour, pouvez-vous m\'envoyer votre preuve de paiement ? Merci.');
+    window.open('https://wa.me/225' + telephone + '?text=' + msg, '_blank');
   }
 
   // ── MODAL ───────────────────────────────────────────
-  function afficherModal(id, client, code) {
+  function afficherModal(id, telephone, operateur, code) {
     document.getElementById('codeAffiche').textContent = code;
-
-    const opNom = client.operateur === 'wave' ? 'Wave' : client.operateur === 'orange' ? 'Orange Money' : 'MTN MoMo';
-    document.getElementById('clientInfoModal').innerHTML = `
-      <div class="client-info-row"><span class="key">ID Client</span><span class="val">${id}</span></div>
-      <div class="client-info-row"><span class="key">Téléphone</span><span class="val">${client.telephone}</span></div>
-      <div class="client-info-row"><span class="key">Opérateur</span><span class="val">${opNom}</span></div>
-      <div class="client-info-row"><span class="key">Montant</span><span class="val" style="color:var(--vert)">5 000 FCFA ✅</span></div>
-    `;
+    const opNom = operateur === 'wave' ? 'Wave' : operateur === 'orange' ? 'Orange Money' : 'MTN MoMo';
+    document.getElementById('clientInfoModal').innerHTML =
+      '<div class="client-info-row"><span class="key">ID Client</span><span class="val">' + id + '</span></div>' +
+      '<div class="client-info-row"><span class="key">Téléphone</span><span class="val">' + telephone + '</span></div>' +
+      '<div class="client-info-row"><span class="key">Opérateur</span><span class="val">' + opNom + '</span></div>' +
+      '<div class="client-info-row"><span class="key">Montant</span><span class="val" style="color:var(--vert)">5 000 FCFA ✅</span></div>';
 
     const msg = encodeURIComponent(
-      `✅ *GestionScolaire-CI — Compte activé !*\n\n` +
-      `Bonjour !\n\nVotre paiement de *5 000 FCFA* a été vérifié et validé.\n\n` +
-      `🔑 Votre identifiant : *${id}*\n` +
-      `🔐 Votre code d'activation : *${code}*\n\n` +
-      `Rendez-vous sur le site pour créer votre mot de passe :\n` +
-      `👉 https://ecole-gestion-ci.netlify.app\n\n` +
-      `⚠️ Ce code expire dans 24h.`
+      '✅ *GestionScolaire-CI — Compte activé !*\n\n' +
+      'Bonjour !\n\nVotre paiement de *5 000 FCFA* a été vérifié et validé.\n\n' +
+      '🔑 Votre identifiant : *' + id + '*\n' +
+      '🔐 Votre code d\'activation : *' + code + '*\n\n' +
+      'Rendez-vous sur le site pour créer votre mot de passe :\n' +
+      '👉 https://ecole-gestion-ci.netlify.app\n\n' +
+      '⚠️ Ce code expire dans 24h.'
     );
-    document.getElementById('btnEnvoyerWA').href = `https://wa.me/225${client.telephone}?text=${msg}`;
+    document.getElementById('btnEnvoyerWA').href = 'https://wa.me/225' + telephone + '?text=' + msg;
 
     document.getElementById('modalOverlay').style.display = 'block';
     const m = document.getElementById('modal');
